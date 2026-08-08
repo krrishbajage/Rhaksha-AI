@@ -18,7 +18,7 @@ Scaffold only — no feature logic implemented yet. Empty app currently builds a
 
 ---
 
-## One-time machine setup (every teammate does this once)
+## One-time machine setup 
 
 You do **not** need Android Studio. This project builds entirely from the command line.
 
