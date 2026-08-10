@@ -1,19 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="background">#FF0B1220</color>
+    <color name="card_background">#FF202B3E</color>
+    <color name="chip_background">#FF2A3346</color>
+    <color name="chip_text">#FFECEFF1</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="on_surface">#FFFFFFFF</color>
+    <color name="primary">#FF4FC3F7</color>
+    <color name="purple_500">#FF4FC3F7</color>
+    <color name="risk_chip_background">#FFFFB300</color>
+    <color name="risk_chip_text">#FF212121</color>
+    <color name="secondary">#FF80DEEA</color>
+    <color name="surface">#FF171F2F</color>
+    <color name="surface_variant">#FF1F2738</color>
+    <color name="teal_200">#FF80DEEA</color>
+    <color name="text_secondary">#FFB0BEC5</color>
+    <color name="warning_background">#FFFFF3CD</color>
+    <color name="warning_text">#FF856404</color>
     <color name="white">#FFFFFFFF</color>
     <string name="app_name">RAKSHA AI</string>
+    <string name="dashboard_empty_state">No notifications captured yet — send yourself a WhatsApp message to test.</string>
+    <string name="dashboard_subtitle">Live WhatsApp notifications captured for analysis.</string>
+    <string name="no_message_text">(no message text)</string>
+    <string name="notification_access_required">Notification access is required for RAKSHA AI to capture WhatsApp messages.</string>
+    <string name="open_notification_settings">Enable notification access</string>
+    <string name="security_logo_desc">Security icon</string>
+    <string name="unknown_sender">Unknown sender</string>
     <style name="Theme.RakshaAI" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_primary</item>
+        <item name="materialCardViewStyle">@style/Widget.RakshaAI.MaterialCardView</item>
+    </style>
+    <style name="Widget.RakshaAI.MaterialCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardBackgroundColor">@color/card_background</item>
     </style>
 </resources>

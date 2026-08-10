@@ -12,7 +12,7 @@
         android:theme="@style/Theme.RakshaAI">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.dashboard.DashboardActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

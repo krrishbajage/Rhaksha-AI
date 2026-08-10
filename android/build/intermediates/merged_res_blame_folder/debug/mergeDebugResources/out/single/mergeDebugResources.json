@@ -1,14 +1,126 @@
 [
     {
-        "merged": "com.raksha.ai.android-debug-31:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.raksha.ai.android-main-33:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-mdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.raksha.ai.android-debug-31:/layout_activity_main.xml.flat",
-        "source": "com.raksha.ai.android-main-33:/layout/activity_main.xml"
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xxxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.raksha.ai.android-debug-31:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.raksha.ai.android-main-33:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-mdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-mdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-debug-32:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-main-34:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-debug-32:\\drawable_ic_attachment.xml.flat",
+        "source": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-main-34:\\drawable\\ic_attachment.xml"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-mdpi_ic_launcher_background.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-mdpi/ic_launcher_background.webp"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xxhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xxxhdpi_ic_launcher_background.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xxxhdpi/ic_launcher_background.webp"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-hdpi_ic_launcher_background.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-hdpi/ic_launcher_background.webp"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-debug-32:\\layout_activity_dashboard.xml.flat",
+        "source": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-main-34:\\layout\\activity_dashboard.xml"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xhdpi_ic_launcher_background.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xhdpi/ic_launcher_background.webp"
+    },
+    {
+        "merged": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-debug-32:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-main-34:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-debug-32:\\drawable_ic_shield.xml.flat",
+        "source": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-main-34:\\drawable\\ic_shield.xml"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-debug-32:\\drawable_ic_empty_state.xml.flat",
+        "source": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-main-34:\\drawable\\ic_empty_state.xml"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-debug-32:\\drawable_ic_link.xml.flat",
+        "source": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-main-34:\\drawable\\ic_link.xml"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-debug-32:\\layout_item_security_event.xml.flat",
+        "source": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-main-34:\\layout\\item_security_event.xml"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-hdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-hdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-debug-32:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\KRRISH\\.gradle\\daemon\\8.7\\com.raksha.ai.android-main-34:\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xxxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xxxhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xxhdpi_ic_launcher_background.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xxhdpi/ic_launcher_background.webp"
+    },
+    {
+        "merged": "com.raksha.ai.android-debug-32:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.raksha.ai.android-main-34:/mipmap-xxhdpi/ic_launcher_round.webp"
     }
 ]

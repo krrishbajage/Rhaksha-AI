@@ -1270,11 +1270,11 @@ color accent_material_dark
 color accent_material_light
 color androidx_core_ripple_material_light
 color androidx_core_secondary_text_default_material_light
+color background
 color background_floating_material_dark
 color background_floating_material_light
 color background_material_dark
 color background_material_light
-color black
 color bright_foreground_disabled_material_dark
 color bright_foreground_disabled_material_light
 color bright_foreground_inverse_material_dark
@@ -1285,10 +1285,13 @@ color button_material_dark
 color button_material_light
 color call_notification_answer_color
 color call_notification_decline_color
+color card_background
 color cardview_dark_background
 color cardview_light_background
 color cardview_shadow_end_color
 color cardview_shadow_start_color
+color chip_background
+color chip_text
 color design_bottom_navigation_shadow_color
 color design_box_stroke_color
 color design_dark_default_color_background
@@ -1993,6 +1996,9 @@ color mtrl_textinput_focused_box_stroke_color
 color mtrl_textinput_hovered_box_stroke_color
 color notification_action_color_filter
 color notification_icon_bg_color
+color on_primary
+color on_surface
+color primary
 color primary_dark_material_dark
 color primary_dark_material_light
 color primary_material_dark
@@ -2001,15 +2007,18 @@ color primary_text_default_material_dark
 color primary_text_default_material_light
 color primary_text_disabled_material_dark
 color primary_text_disabled_material_light
-color purple_200
 color purple_500
-color purple_700
 color ripple_material_dark
 color ripple_material_light
+color risk_chip_background
+color risk_chip_text
+color secondary
 color secondary_text_default_material_dark
 color secondary_text_default_material_light
 color secondary_text_disabled_material_dark
 color secondary_text_disabled_material_light
+color surface
+color surface_variant
 color switch_thumb_disabled_material_dark
 color switch_thumb_disabled_material_light
 color switch_thumb_material_dark
@@ -2017,9 +2026,11 @@ color switch_thumb_material_light
 color switch_thumb_normal_material_dark
 color switch_thumb_normal_material_light
 color teal_200
-color teal_700
+color text_secondary
 color tooltip_background_dark
 color tooltip_background_light
+color warning_background
+color warning_text
 color white
 dimen abc_action_bar_content_inset_material
 dimen abc_action_bar_content_inset_with_nav
@@ -2919,6 +2930,7 @@ drawable design_ic_visibility_off
 drawable design_password_eye
 drawable design_snackbar_background
 drawable ic_arrow_back_black_24
+drawable ic_attachment
 drawable ic_call_answer
 drawable ic_call_answer_low
 drawable ic_call_answer_video
@@ -2927,7 +2939,9 @@ drawable ic_call_decline
 drawable ic_call_decline_low
 drawable ic_clear_black_24
 drawable ic_clock_black_24dp
+drawable ic_empty_state
 drawable ic_keyboard_black_24dp
+drawable ic_link
 drawable ic_m3_chip_check
 drawable ic_m3_chip_checked_circle
 drawable ic_m3_chip_close
@@ -2936,6 +2950,7 @@ drawable ic_mtrl_chip_checked_black
 drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
 drawable ic_search_black_24
+drawable ic_shield
 drawable indeterminate_static
 drawable m3_avd_hide_password
 drawable m3_avd_show_password
@@ -3027,6 +3042,7 @@ id SYM
 id TOP_END
 id TOP_START
 id accelerate
+id accessBanner
 id accessibility_action_clickable_span
 id accessibility_custom_action_0
 id accessibility_custom_action_1
@@ -3089,6 +3105,7 @@ id animateToStart
 id arc
 id asConfigured
 id async
+id attachmentChip
 id auto
 id autoComplete
 id autoCompleteToEnd
@@ -3164,11 +3181,14 @@ id edit_query
 id edit_text_id
 id elastic
 id embed
+id emptyStateView
+id enableAccessButton
 id end
 id endToStart
 id enterAlways
 id enterAlwaysCollapsed
 id escape
+id eventsRecyclerView
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
@@ -3211,6 +3231,7 @@ id indeterminate
 id info
 id invisible
 id inward
+id is_pooling_container_tag
 id italic
 id item_touch_helper_previous_elevation
 id jumpToEnd
@@ -3251,6 +3272,7 @@ id material_timepicker_view
 id material_value_index
 id matrix
 id message
+id messageText
 id middle
 id mini
 id month_grid
@@ -3328,6 +3350,7 @@ id pathRelative
 id peekHeight
 id percent
 id pin
+id pooling_container_listener_holder_tag
 id position
 id postLayout
 id pressed
@@ -3367,6 +3390,7 @@ id search_voice_btn
 id select_dialog_listview
 id selected
 id selection_type
+id senderText
 id shortcut
 id showCustom
 id showHome
@@ -3430,11 +3454,13 @@ id textinput_placeholder
 id textinput_prefix_text
 id textinput_suffix_text
 id time
+id timestampText
 id title
 id titleDividerNoCustom
 id title_template
 id toggle
 id top
+id topAppBar
 id topPanel
 id touch_outside
 id transitionToEnd
@@ -3452,6 +3478,7 @@ id unchecked
 id uniform
 id unlabeled
 id up
+id urlChip
 id useLogo
 id view_offset_helper
 id view_tree_lifecycle_owner
@@ -3579,6 +3606,7 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_dashboard
 layout activity_main
 layout custom_dialog
 layout design_bottom_navigation_item
@@ -3598,6 +3626,7 @@ layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
+layout item_security_event
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
 layout m3_alert_dialog_title
@@ -3660,6 +3689,8 @@ layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
 mipmap ic_launcher
+mipmap ic_launcher_background
+mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 plurals mtrl_badge_content_description
 string abc_action_bar_home_description
@@ -3709,6 +3740,8 @@ string character_counter_content_description
 string character_counter_overflowed_content_description
 string character_counter_pattern
 string clear_text_end_icon_content_description
+string dashboard_empty_state
+string dashboard_subtitle
 string error_a11y_label
 string error_icon_content_description
 string exposed_dropdown_menu_content_description
@@ -3817,6 +3850,9 @@ string mtrl_switch_track_decoration_path
 string mtrl_switch_track_path
 string mtrl_timepicker_cancel
 string mtrl_timepicker_confirm
+string no_message_text
+string notification_access_required
+string open_notification_settings
 string password_toggle_content_description
 string path_password_eye
 string path_password_eye_mask_strike_through
@@ -3826,9 +3862,11 @@ string search_menu_title
 string searchbar_scrolling_view_behavior
 string searchview_clear_text_content_description
 string searchview_navigation_content_description
+string security_logo_desc
 string side_sheet_accessibility_pane_title
 string side_sheet_behavior
 string status_bar_notification_info_overflow
+string unknown_sender
 style AlertDialog_AppCompat
 style AlertDialog_AppCompat_Light
 style Animation_AppCompat_Dialog
@@ -4955,6 +4993,7 @@ style Widget_MaterialComponents_Toolbar_Primary
 style Widget_MaterialComponents_Toolbar_PrimarySurface
 style Widget_MaterialComponents_Toolbar_Surface
 style Widget_MaterialComponents_Tooltip
+style Widget_RakshaAI_MaterialCardView
 style Widget_Support_CoordinatorLayout
 styleable ActionBar background backgroundSplit backgroundStacked contentInsetEnd contentInsetEndWithActions contentInsetLeft contentInsetRight contentInsetStart contentInsetStartWithNavigation customNavigationLayout displayOptions divider elevation height hideOnContentScroll homeAsUpIndicator homeLayout icon indeterminateProgressStyle itemPadding logo navigationMode popupTheme progressBarPadding progressBarStyle subtitle subtitleTextStyle title titleTextStyle
 styleable ActionBarLayout android_layout_gravity

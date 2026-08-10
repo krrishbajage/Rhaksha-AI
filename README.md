@@ -14,7 +14,7 @@ raksha-ai/
 
 ## Status
 
-Scaffold only — no feature logic implemented yet. Empty app currently builds and installs on a physical device.
+Notification capture + dashboard UI are implemented for WhatsApp (`com.whatsapp`). Backend calls are **stubbed** — events are logged locally and shown in the app, but nothing is sent to FastAPI yet.
 
 ---
 
@@ -79,6 +79,26 @@ The first run will download Gradle itself plus all project dependencies (a few h
 Android requires a human to enable this — it cannot be granted by code:
 
 Settings → Apps → Special app access → Notification access → toggle on **RAKSHA AI**.
+
+## Test notification capture (current milestone)
+
+Backend networking is intentionally stubbed. When a WhatsApp notification arrives, RAKSHA AI:
+
+1. Parses title/text/URLs/attachment-like filenames
+2. Logs the `SecurityEvent` with tag `RAKSHA` (view with `adb logcat -s RAKSHA`)
+3. Shows the event live in the **Dashboard** list (no HTTP request is made)
+
+### How to test on your phone
+
+1. Install the latest build: `./gradlew installDebug` (or `gradle installDebug` if the wrapper download times out)
+2. Open **RAKSHA AI** → tap **Enable notification access** if prompted, then toggle RAKSHA AI on in system settings
+3. Return to the Dashboard (keep the app open, or reopen it after granting access)
+4. From another phone (or WhatsApp Web), send yourself a WhatsApp message like:
+   ```
+   Check this link https://example.com/test and download update.apk
+   ```
+5. Confirm the message appears at the top of the Dashboard with URL count `1` and attachment count `1`
+6. Optional: run `adb logcat -s RAKSHA` to see the stub backend log line (`would POST ... not sent`)
 
 ## Backend setup (once backend work starts)
 

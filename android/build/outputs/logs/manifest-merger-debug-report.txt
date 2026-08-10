@@ -8,9 +8,10 @@ MERGED from [com.google.android.material:material:1.12.0] C:\Users\KRRISH\.gradl
 MERGED from [androidx.appcompat:appcompat-resources:1.7.0] C:\Users\KRRISH\.gradle\caches\transforms-4\e97b8fec522e0237fe171c43b96f412b\transformed\appcompat-resources-1.7.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\KRRISH\.gradle\caches\transforms-4\3284b1fe802a3f384d6e1862779d2989\transformed\constraintlayout-2.0.1\AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat:1.7.0] C:\Users\KRRISH\.gradle\caches\transforms-4\36b3856ba9c7cbbdc36c1fd5fe2a4d44\transformed\appcompat-1.7.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.viewpager2:viewpager2:1.1.0-beta02] C:\Users\KRRISH\.gradle\caches\transforms-4\dd7353f748a41fc046eb17e227070521\transformed\viewpager2-1.1.0-beta02\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.recyclerview:recyclerview:1.3.2] C:\Users\KRRISH\.gradle\caches\transforms-4\71ce8e770ba3f8c0ed42099b307d28d4\transformed\recyclerview-1.3.2\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] C:\Users\KRRISH\.gradle\caches\transforms-4\dc9369d3a3308050fc6782cf03ea6014\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\KRRISH\.gradle\caches\transforms-4\192474c036ec43764acdf6f3e34ae042\transformed\emoji2-1.3.0\AndroidManifest.xml:17:1-35:12
-MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\94d31c5817af2daa94c50455e2cb418d\transformed\viewpager2-1.0.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.fragment:fragment:1.5.4] C:\Users\KRRISH\.gradle\caches\transforms-4\3d9efbf281507841f2c86d9fd1c4139f\transformed\fragment-1.5.4\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.activity:activity:1.8.0] C:\Users\KRRISH\.gradle\caches\transforms-4\0457bb27240462038138d6124a3851e0\transformed\activity-1.8.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.drawerlayout:drawerlayout:1.1.1] C:\Users\KRRISH\.gradle\caches\transforms-4\25d7a0acfcd36a88cec5870374c1add7\transformed\drawerlayout-1.1.1\AndroidManifest.xml:17:1-24:12
@@ -22,9 +23,9 @@ MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\KRRISH\.grad
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\55ce5ac59d6f676405b119063dd7e761\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\e2846cd86094a5772d00090bc5999692\transformed\loader-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\8cf63126afecb5baa428a1cf8e5c8ba0\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\KRRISH\.gradle\caches\transforms-4\259b2081233595c989a7e45582d126cf\transformed\recyclerview-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.customview:customview:1.1.0] C:\Users\KRRISH\.gradle\caches\transforms-4\c8abdcdcc7e40002f4f911bf76bc086d\transformed\customview-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.core:core:1.13.1] C:\Users\KRRISH\.gradle\caches\transforms-4\8e0a0bff2d388b6446750efdf4a5758f\transformed\core-1.13.1\AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\ca320cc04769201d96ae35a18d4b1c24\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\KRRISH\.gradle\caches\transforms-4\4bd627a9048f6ce18b1b2d88bd05a714\transformed\savedstate-1.2.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.2] C:\Users\KRRISH\.gradle\caches\transforms-4\a1eb4c955a5536edee1a0604e5a8d871\transformed\lifecycle-livedata-2.6.2\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.2] C:\Users\KRRISH\.gradle\caches\transforms-4\475157b7fb9afaa8cbd268d644c85bc1\transformed\lifecycle-viewmodel-2.6.2\AndroidManifest.xml:17:1-22:12
@@ -92,12 +93,12 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\KRRISH\.gradle\cac
 		ADDED from C:\Users\KRRISH\OneDrive\Desktop\Rhaksha AI\android\src\main\AndroidManifest.xml:7:9-35
 	android:theme
 		ADDED from C:\Users\KRRISH\OneDrive\Desktop\Rhaksha AI\android\src\main\AndroidManifest.xml:12:9-46
-activity#com.raksha.ai.ui.MainActivity
+activity#com.raksha.ai.ui.dashboard.DashboardActivity
 ADDED from C:\Users\KRRISH\OneDrive\Desktop\Rhaksha AI\android\src\main\AndroidManifest.xml:14:9-21:20
 	android:exported
 		ADDED from C:\Users\KRRISH\OneDrive\Desktop\Rhaksha AI\android\src\main\AndroidManifest.xml:16:13-36
 	android:name
-		ADDED from C:\Users\KRRISH\OneDrive\Desktop\Rhaksha AI\android\src\main\AndroidManifest.xml:15:13-44
+		ADDED from C:\Users\KRRISH\OneDrive\Desktop\Rhaksha AI\android\src\main\AndroidManifest.xml:15:13-59
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
 ADDED from C:\Users\KRRISH\OneDrive\Desktop\Rhaksha AI\android\src\main\AndroidManifest.xml:17:13-20:29
 action#android.intent.action.MAIN
@@ -134,12 +135,14 @@ MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\KRRISH\.
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\KRRISH\.gradle\caches\transforms-4\3284b1fe802a3f384d6e1862779d2989\transformed\constraintlayout-2.0.1\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.appcompat:appcompat:1.7.0] C:\Users\KRRISH\.gradle\caches\transforms-4\36b3856ba9c7cbbdc36c1fd5fe2a4d44\transformed\appcompat-1.7.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.appcompat:appcompat:1.7.0] C:\Users\KRRISH\.gradle\caches\transforms-4\36b3856ba9c7cbbdc36c1fd5fe2a4d44\transformed\appcompat-1.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.viewpager2:viewpager2:1.1.0-beta02] C:\Users\KRRISH\.gradle\caches\transforms-4\dd7353f748a41fc046eb17e227070521\transformed\viewpager2-1.1.0-beta02\AndroidManifest.xml:5:5-44
+MERGED from [androidx.viewpager2:viewpager2:1.1.0-beta02] C:\Users\KRRISH\.gradle\caches\transforms-4\dd7353f748a41fc046eb17e227070521\transformed\viewpager2-1.1.0-beta02\AndroidManifest.xml:5:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.3.2] C:\Users\KRRISH\.gradle\caches\transforms-4\71ce8e770ba3f8c0ed42099b307d28d4\transformed\recyclerview-1.3.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.3.2] C:\Users\KRRISH\.gradle\caches\transforms-4\71ce8e770ba3f8c0ed42099b307d28d4\transformed\recyclerview-1.3.2\AndroidManifest.xml:20:5-44
 MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] C:\Users\KRRISH\.gradle\caches\transforms-4\dc9369d3a3308050fc6782cf03ea6014\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.emoji2:emoji2-views-helper:1.3.0] C:\Users\KRRISH\.gradle\caches\transforms-4\dc9369d3a3308050fc6782cf03ea6014\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\KRRISH\.gradle\caches\transforms-4\192474c036ec43764acdf6f3e34ae042\transformed\emoji2-1.3.0\AndroidManifest.xml:21:5-44
 MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\KRRISH\.gradle\caches\transforms-4\192474c036ec43764acdf6f3e34ae042\transformed\emoji2-1.3.0\AndroidManifest.xml:21:5-44
-MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\94d31c5817af2daa94c50455e2cb418d\transformed\viewpager2-1.0.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\94d31c5817af2daa94c50455e2cb418d\transformed\viewpager2-1.0.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.fragment:fragment:1.5.4] C:\Users\KRRISH\.gradle\caches\transforms-4\3d9efbf281507841f2c86d9fd1c4139f\transformed\fragment-1.5.4\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.fragment:fragment:1.5.4] C:\Users\KRRISH\.gradle\caches\transforms-4\3d9efbf281507841f2c86d9fd1c4139f\transformed\fragment-1.5.4\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.activity:activity:1.8.0] C:\Users\KRRISH\.gradle\caches\transforms-4\0457bb27240462038138d6124a3851e0\transformed\activity-1.8.0\AndroidManifest.xml:20:5-44
@@ -162,12 +165,12 @@ MERGED from [androidx.loader:loader:1.0.0] C:\Users\KRRISH\.gradle\caches\transf
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\e2846cd86094a5772d00090bc5999692\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\8cf63126afecb5baa428a1cf8e5c8ba0\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\8cf63126afecb5baa428a1cf8e5c8ba0\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\KRRISH\.gradle\caches\transforms-4\259b2081233595c989a7e45582d126cf\transformed\recyclerview-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\KRRISH\.gradle\caches\transforms-4\259b2081233595c989a7e45582d126cf\transformed\recyclerview-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.customview:customview:1.1.0] C:\Users\KRRISH\.gradle\caches\transforms-4\c8abdcdcc7e40002f4f911bf76bc086d\transformed\customview-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.customview:customview:1.1.0] C:\Users\KRRISH\.gradle\caches\transforms-4\c8abdcdcc7e40002f4f911bf76bc086d\transformed\customview-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.core:core:1.13.1] C:\Users\KRRISH\.gradle\caches\transforms-4\8e0a0bff2d388b6446750efdf4a5758f\transformed\core-1.13.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core:1.13.1] C:\Users\KRRISH\.gradle\caches\transforms-4\8e0a0bff2d388b6446750efdf4a5758f\transformed\core-1.13.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\ca320cc04769201d96ae35a18d4b1c24\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\KRRISH\.gradle\caches\transforms-4\ca320cc04769201d96ae35a18d4b1c24\transformed\customview-poolingcontainer-1.0.0\AndroidManifest.xml:20:5-21:38
 MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\KRRISH\.gradle\caches\transforms-4\4bd627a9048f6ce18b1b2d88bd05a714\transformed\savedstate-1.2.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.savedstate:savedstate:1.2.1] C:\Users\KRRISH\.gradle\caches\transforms-4\4bd627a9048f6ce18b1b2d88bd05a714\transformed\savedstate-1.2.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.6.2] C:\Users\KRRISH\.gradle\caches\transforms-4\a1eb4c955a5536edee1a0604e5a8d871\transformed\lifecycle-livedata-2.6.2\AndroidManifest.xml:20:5-44

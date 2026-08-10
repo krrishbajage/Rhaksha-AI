@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RAKSHA AI</string>
+    <string name="dashboard_subtitle">Live WhatsApp notifications captured for analysis.</string>
+    <string name="dashboard_empty_state">No notifications captured yet — send yourself a WhatsApp message to test.</string>
+    <string name="notification_access_required">Notification access is required for RAKSHA AI to capture WhatsApp messages.</string>
+    <string name="open_notification_settings">Enable notification access</string>
+    <string name="unknown_sender">Unknown sender</string>
+    <string name="no_message_text">(no message text)</string>
+    <string name="security_logo_desc">Security icon</string>
 </resources>

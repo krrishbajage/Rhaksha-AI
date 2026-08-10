@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.raksha.ai.android-mergeDebugResources-29:/values-watch-v20/values-watch-v20.xml",
+            "outputFile": "com.raksha.ai.android-mergeDebugResources-30:/values-watch-v20/values-watch-v20.xml",
             "map": [
                 {
                     "source": "C:\\Users\\KRRISH\\.gradle\\caches\\transforms-4\\36b3856ba9c7cbbdc36c1fd5fe2a4d44\\transformed\\appcompat-1.7.0\\res\\values-watch-v20\\values-watch-v20.xml",
