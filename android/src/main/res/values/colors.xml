@@ -11,8 +11,13 @@
     <color name="text_secondary">#FFB0BEC5</color>
     <color name="chip_text">#FFECEFF1</color>
     <color name="chip_background">#FF2A3346</color>
-    <color name="risk_chip_background">#FFFFB300</color>
-    <color name="risk_chip_text">#FF212121</color>
+    <color name="risk_low">#FF2E7D32</color>
+    <color name="risk_medium">#FFF9A825</color>
+    <color name="risk_high">#FFC62828</color>
+    <color name="risk_pending">#FF546E7A</color>
+    <color name="risk_failed">#FF6A1B9A</color>
+    <color name="on_risk_badge">#FFFFFFFF</color>
+    <color name="on_risk_medium">#FF212121</color>
     <color name="warning_background">#FFFFF3CD</color>
     <color name="warning_text">#FF856404</color>
     <color name="white">#FFFFFFFF</color>

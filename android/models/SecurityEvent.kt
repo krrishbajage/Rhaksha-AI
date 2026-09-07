@@ -4,6 +4,12 @@ import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 
+enum class AnalysisStatus {
+    PENDING,
+    COMPLETE,
+    FAILED
+}
+
 data class SecurityEvent(
     val event_id: String,
     val source_app: String,
@@ -12,7 +18,9 @@ data class SecurityEvent(
     val urls: List<String>,
     val attachments: List<String>,
     val timestamp: String,
-    val metadata: Map<String, Any> = emptyMap()
+    val metadata: Map<String, Any> = emptyMap(),
+    @Transient val analysisStatus: AnalysisStatus = AnalysisStatus.PENDING,
+    @Transient val riskReport: RiskReport? = null
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -23,7 +31,11 @@ data class SecurityEvent(
         urls = parcel.createStringArrayList() ?: emptyList(),
         attachments = parcel.createStringArrayList() ?: emptyList(),
         timestamp = parcel.readString() ?: "",
-        metadata = bundleToMap(parcel.readBundle())
+        metadata = bundleToMap(parcel.readBundle(SecurityEvent::class.java.classLoader)),
+        analysisStatus = AnalysisStatus.valueOf(
+            parcel.readString() ?: AnalysisStatus.PENDING.name
+        ),
+        riskReport = parcel.readParcelable(RiskReport::class.java.classLoader)
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -35,6 +47,8 @@ data class SecurityEvent(
         parcel.writeStringList(ArrayList(attachments))
         parcel.writeString(timestamp)
         parcel.writeBundle(mapToBundle(metadata))
+        parcel.writeString(analysisStatus.name)
+        parcel.writeParcelable(riskReport, flags)
     }
 
     override fun describeContents(): Int = 0

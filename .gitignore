@@ -1,0 +1,73 @@
+# Android and Gradle build outputs
+**/build/
+.gradle/
+.gradle-user/
+.gradle-user-caches/
+captures/
+**/captures/
+.externalNativeBuild/
+**/.externalNativeBuild/
+.cxx/
+**/.cxx/
+
+# Android packages and compiled artifacts
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Android Studio project files and machine-local SDK settings
+.idea/
+**/.idea/
+*.iml
+local.properties
+**/local.properties
+
+# Android signing credentials: never commit private keys or keystores
+*.jks
+*.keystore
+
+# Python caches, environments, tests, and coverage output
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pytest_cache/
+.pytest_cache/
+.venv/
+venv/
+env/
+dist/
+**/dist/
+*.egg-info/
+**/*.egg-info/
+.coverage
+coverage.xml
+htmlcov/
+
+# Environment files and private credentials
+.env
+**/.env
+*.pem
+*.key
+
+# Docker data when volumes are bind-mounted into the workspace
+postgres_data/
+**/postgres_data/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editor and local agent metadata
+# .vscode/ is ignored by default to avoid personal workspace settings.
+# Remove this rule if the team wants to track shared .vscode settings.
+.vscode/
+**/.vscode/
+.cursor/
+**/.cursor/
+.codex/
+**/.codex/
+
+# Local logs
+*.log

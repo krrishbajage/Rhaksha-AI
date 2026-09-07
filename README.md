@@ -100,13 +100,25 @@ Backend networking is intentionally stubbed. When a WhatsApp notification arrive
 5. Confirm the message appears at the top of the Dashboard with URL count `1` and attachment count `1`
 6. Optional: run `adb logcat -s RAKSHA` to see the stub backend log line (`would POST ... not sent`)
 
-## Backend setup (once backend work starts)
+## Backend (FastAPI + LangGraph)
+
+The investigation pipeline is a fixed LangGraph graph (not Deep Agents):
+
+`START → planner → (message / url / attachment in parallel) → aggregator → risk_engine → explanation → END`
+
+Gemini (`gemini-3.6-flash`) is used for the message and explanation nodes. Safe Browsing and VirusTotal are **optional**: missing keys log a warning and return `status: unknown` so the graph still runs.
 
 ```bash
-cd backend
-cp .env.example .env   # fill in API keys
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+cp .env.example .env   # set GOOGLE_API_KEY from https://aistudio.google.com
+docker compose up --build backend
+```
+
+Then `POST /api/events/analyze` with a `SecurityEvent` JSON body. Health check: `GET /health`.
+
+Run the sample investigation test (prints the `RiskReport`):
+
+```bash
+docker compose run --rm backend python -m pytest /tests/test_analyze_endpoint.py -s
 ```
 
 ---

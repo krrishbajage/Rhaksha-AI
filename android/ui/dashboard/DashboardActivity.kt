@@ -75,7 +75,11 @@ class DashboardActivity : AppCompatActivity() {
         val firstVisibleView = layoutManager.findViewByPosition(firstVisiblePosition)
         val topOffset = firstVisibleView?.top ?: 0
 
-        adapter.addEvent(event)
+        val inserted = adapter.upsertEvent(event)
+
+        if (!inserted) {
+            return
+        }
 
         if (firstVisiblePosition == RecyclerView.NO_POSITION || firstVisiblePosition <= 1) {
             recyclerView.scrollToPosition(0)

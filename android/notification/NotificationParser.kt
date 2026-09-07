@@ -3,6 +3,7 @@ package com.raksha.ai.notification
 import android.app.Notification
 import android.os.Bundle
 import android.service.notification.StatusBarNotification
+import com.raksha.ai.models.AnalysisStatus
 import com.raksha.ai.models.SecurityEvent
 import java.time.Instant
 import java.util.UUID
@@ -59,7 +60,8 @@ object NotificationParser {
             urls = UrlExtractor.extract(scanText),
             attachments = AttachmentDetector.detect(scanText),
             timestamp = Instant.now().toString(),
-            metadata = metadata
+            metadata = metadata,
+            analysisStatus = AnalysisStatus.PENDING
         )
     }
 }

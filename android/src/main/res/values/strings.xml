@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RAKSHA AI</string>
+    <string name="security_logo_desc">RAKSHA AI logo</string>
     <string name="dashboard_subtitle">Live WhatsApp notifications captured for analysis.</string>
     <string name="dashboard_empty_state">No notifications captured yet — send yourself a WhatsApp message to test.</string>
     <string name="notification_access_required">Notification access is required for RAKSHA AI to capture WhatsApp messages.</string>
     <string name="open_notification_settings">Enable notification access</string>
     <string name="unknown_sender">Unknown sender</string>
     <string name="no_message_text">(no message text)</string>
-    <string name="security_logo_desc">Security icon</string>
+    <string name="event_indicators">URLs: %1$d | Attachments: %2$d</string>
+    <string name="risk_pending">Analyzing…</string>
+    <string name="risk_failed">Failed to analyze</string>
+    <string name="risk_unknown">Unknown</string>
+    <string name="explanation_label">Why this is risky</string>
+    <string name="action_label">What you should do</string>
+    <string name="category_none">No scam category</string>
 </resources>

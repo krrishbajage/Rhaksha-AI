@@ -18,8 +18,13 @@ object SecurityEventBus {
         listeners.remove(listener)
     }
 
-    fun post(event: SecurityEvent) {
-        events.add(0, event)
+    fun upsert(event: SecurityEvent) {
+        val index = events.indexOfFirst { it.event_id == event.event_id }
+        if (index >= 0) {
+            events[index] = event
+        } else {
+            events.add(0, event)
+        }
         listeners.forEach { it(event) }
     }
 }
