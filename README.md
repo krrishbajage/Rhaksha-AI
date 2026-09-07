@@ -18,7 +18,7 @@ Notification capture + dashboard UI are implemented for WhatsApp (`com.whatsapp`
 
 ---
 
-## One-time machine setup (every teammate does this once)
+## One-time machine setup 
 
 You do **not** need Android Studio. This project builds entirely from the command line.
 
