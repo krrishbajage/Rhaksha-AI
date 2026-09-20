@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.raksha.ai.data.RakshaApplication
 import com.raksha.ai.notification.RakshaNotificationListenerService
+import com.raksha.ai.ui.detail.InvestigationDetailActivity
+import com.raksha.ai.ui.history.HistoryActivity
 import kotlinx.coroutines.launch
 
 class DashboardActivity : AppCompatActivity() {
@@ -24,7 +27,18 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var emptyStateView: View
     private lateinit var accessBanner: View
     private lateinit var enableAccessButton: Button
-    private val adapter = SecurityEventAdapter()
+    private lateinit var protectionStatusText: TextView
+    private lateinit var totalCountText: TextView
+    private lateinit var pendingCountText: TextView
+    private lateinit var highRiskCountText: TextView
+    private lateinit var failedCountText: TextView
+    private lateinit var historyButton: Button
+    private val adapter = SecurityEventAdapter { event ->
+        startActivity(
+            Intent(this, InvestigationDetailActivity::class.java)
+                .putExtra(InvestigationDetailActivity.EXTRA_EVENT, event)
+        )
+    }
     private val viewModel: DashboardViewModel by viewModels {
         DashboardViewModelFactory((application as RakshaApplication).repository)
     }
@@ -37,6 +51,12 @@ class DashboardActivity : AppCompatActivity() {
         emptyStateView = findViewById(R.id.emptyStateView)
         accessBanner = findViewById(R.id.accessBanner)
         enableAccessButton = findViewById(R.id.enableAccessButton)
+        protectionStatusText = findViewById(R.id.protectionStatusText)
+        totalCountText = findViewById(R.id.totalCountText)
+        pendingCountText = findViewById(R.id.pendingCountText)
+        highRiskCountText = findViewById(R.id.highRiskCountText)
+        failedCountText = findViewById(R.id.failedCountText)
+        historyButton = findViewById(R.id.historyButton)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -47,6 +67,10 @@ class DashboardActivity : AppCompatActivity() {
             repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
                     adapter.submitList(state.events)
+                    totalCountText.text = state.totalCount.toString()
+                    pendingCountText.text = state.pendingCount.toString()
+                    highRiskCountText.text = state.highRiskCount.toString()
+                    failedCountText.text = state.failedCount.toString()
                     updateEmptyState()
                 }
             }
@@ -54,6 +78,9 @@ class DashboardActivity : AppCompatActivity() {
 
         enableAccessButton.setOnClickListener {
             startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+        }
+        historyButton.setOnClickListener {
+            startActivity(Intent(this, HistoryActivity::class.java))
         }
     }
 
@@ -79,6 +106,11 @@ class DashboardActivity : AppCompatActivity() {
     private fun updateAccessBanner() {
         val enabled = isNotificationListenerEnabled()
         accessBanner.visibility = if (enabled) View.GONE else View.VISIBLE
+        protectionStatusText.text = if (enabled) {
+            getString(R.string.protection_active)
+        } else {
+            getString(R.string.protection_needs_access)
+        }
     }
 
     private fun isNotificationListenerEnabled(): Boolean {

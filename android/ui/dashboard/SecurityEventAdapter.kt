@@ -15,7 +15,9 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class SecurityEventAdapter : RecyclerView.Adapter<SecurityEventAdapter.EventViewHolder>() {
+class SecurityEventAdapter(
+    private val onEventClick: (SecurityEvent) -> Unit = {}
+) : RecyclerView.Adapter<SecurityEventAdapter.EventViewHolder>() {
 
     private val events = mutableListOf<SecurityEvent>()
     private val expandedIds = mutableSetOf<String>()
@@ -47,7 +49,7 @@ class SecurityEventAdapter : RecyclerView.Adapter<SecurityEventAdapter.EventView
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val event = events[position]
-        holder.bind(event, expandedIds.contains(event.event_id)) {
+        holder.bind(event, expandedIds.contains(event.event_id), { onEventClick(event) }) {
             if (!expandedIds.add(event.event_id)) {
                 expandedIds.remove(event.event_id)
             }
@@ -69,20 +71,27 @@ class SecurityEventAdapter : RecyclerView.Adapter<SecurityEventAdapter.EventView
         private val explanationText: TextView = itemView.findViewById(R.id.explanationText)
         private val actionText: TextView = itemView.findViewById(R.id.actionText)
 
-        fun bind(event: SecurityEvent, expanded: Boolean, onToggle: () -> Unit) {
+        fun bind(event: SecurityEvent, expanded: Boolean, onOpen: () -> Unit, onToggle: () -> Unit) {
             senderView.text = event.sender ?: itemView.context.getString(R.string.unknown_sender)
             messageView.text = event.message_text.ifBlank {
                 itemView.context.getString(R.string.no_message_text)
             }
             timestampView.text = formatTimestamp(event.timestamp)
+            itemView.contentDescription = itemView.context.getString(
+                R.string.event_content_description,
+                senderView.text,
+                event.displayRisk,
+                messageView.text
+            )
 
             when (event.analysisStatus) {
                 AnalysisStatus.PENDING -> {
                     pendingRow.visibility = View.VISIBLE
                     resultRow.visibility = View.GONE
                     detailsContainer.visibility = View.GONE
-                    itemView.setOnClickListener(null)
-                    itemView.isClickable = false
+                    itemView.isClickable = true
+                    itemView.setOnClickListener { onOpen() }
+                    itemView.setOnLongClickListener(null)
                 }
                 AnalysisStatus.FAILED -> {
                     pendingRow.visibility = View.GONE
@@ -95,9 +104,13 @@ class SecurityEventAdapter : RecyclerView.Adapter<SecurityEventAdapter.EventView
                     categoryText.text = itemView.context.getString(R.string.risk_failed)
                     detailsContainer.visibility = if (expanded) View.VISIBLE else View.GONE
                     explanationText.text = itemView.context.getString(R.string.risk_failed)
-                    actionText.text = ""
+                    actionText.text = event.failureReason ?: itemView.context.getString(R.string.risk_failed)
                     itemView.isClickable = true
-                    itemView.setOnClickListener { onToggle() }
+                    itemView.setOnClickListener { onOpen() }
+                    itemView.setOnLongClickListener {
+                        onToggle()
+                        true
+                    }
                 }
                 AnalysisStatus.COMPLETE -> {
                     pendingRow.visibility = View.GONE
@@ -115,7 +128,11 @@ class SecurityEventAdapter : RecyclerView.Adapter<SecurityEventAdapter.EventView
                     actionText.text = report?.recommended_action.orEmpty()
                     detailsContainer.visibility = if (expanded) View.VISIBLE else View.GONE
                     itemView.isClickable = true
-                    itemView.setOnClickListener { onToggle() }
+                    itemView.setOnClickListener { onOpen() }
+                    itemView.setOnLongClickListener {
+                        onToggle()
+                        true
+                    }
                 }
             }
         }

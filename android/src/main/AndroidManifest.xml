@@ -23,6 +23,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.history.HistoryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.detail.InvestigationDetailActivity"
+            android:exported="false" />
+
         <service
             android:name=".notification.RakshaNotificationListenerService"
             android:exported="true"

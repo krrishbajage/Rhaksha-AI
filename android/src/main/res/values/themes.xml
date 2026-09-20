@@ -16,4 +16,20 @@
         <item name="cardElevation">4dp</item>
         <item name="cardBackgroundColor">@color/card_background</item>
     </style>
+
+    <style name="Text.Raksha.Label" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Text.Raksha.Value" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">15sp</item>
+    </style>
 </resources>
