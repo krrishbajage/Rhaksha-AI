@@ -19,17 +19,21 @@ class SecurityRepository(private val dao: SecurityEventDao, private val api: Sec
     }
 
     /** Persist before networking. A cancellation deliberately leaves PENDING for startup recovery. */
-    suspend fun capture(event: SecurityEvent) {
+    suspend fun capture(event: SecurityEvent): SecurityEvent {
         writeMutex.withLock { persist(event.copy(analysisStatus = AnalysisStatus.PENDING, displayRisk = "PENDING")) }
         try {
             val report = api.analyzeEvent(event)
-            writeMutex.withLock { persist(event.copy(analysisStatus = AnalysisStatus.COMPLETE, riskReport = report,
-                displayRisk = report.risk_level, failureReason = null)) }
+            val analyzed = event.copy(analysisStatus = AnalysisStatus.COMPLETE, riskReport = report,
+                displayRisk = report.risk_level, failureReason = null)
+            writeMutex.withLock { persist(analyzed) }
+            return analyzed
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (error: Exception) {
-            writeMutex.withLock { persist(event.copy(analysisStatus = AnalysisStatus.FAILED,
-                displayRisk = "COULDN'T VERIFY", failureReason = boundedReason(error.message))) }
+            val failed = event.copy(analysisStatus = AnalysisStatus.FAILED,
+                displayRisk = "COULDN'T VERIFY", failureReason = boundedReason(error.message))
+            writeMutex.withLock { persist(failed) }
+            return failed
         }
     }
 

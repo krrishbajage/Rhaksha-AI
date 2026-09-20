@@ -19,6 +19,8 @@ import com.raksha.ai.data.RakshaApplication
 import com.raksha.ai.notification.RakshaNotificationListenerService
 import com.raksha.ai.ui.detail.InvestigationDetailActivity
 import com.raksha.ai.ui.history.HistoryActivity
+import com.raksha.ai.ui.onboarding.OnboardingActivity
+import com.raksha.ai.ui.settings.SettingsActivity
 import kotlinx.coroutines.launch
 
 class DashboardActivity : AppCompatActivity() {
@@ -33,6 +35,7 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var highRiskCountText: TextView
     private lateinit var failedCountText: TextView
     private lateinit var historyButton: Button
+    private lateinit var settingsButton: Button
     private val adapter = SecurityEventAdapter { event ->
         startActivity(
             Intent(this, InvestigationDetailActivity::class.java)
@@ -45,6 +48,10 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val app = application as RakshaApplication
+        if (!app.settingsStore.onboardingComplete) {
+            startActivity(Intent(this, OnboardingActivity::class.java))
+        }
         setContentView(R.layout.activity_dashboard)
 
         recyclerView = findViewById(R.id.eventsRecyclerView)
@@ -57,6 +64,7 @@ class DashboardActivity : AppCompatActivity() {
         highRiskCountText = findViewById(R.id.highRiskCountText)
         failedCountText = findViewById(R.id.failedCountText)
         historyButton = findViewById(R.id.historyButton)
+        settingsButton = findViewById(R.id.settingsButton)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -81,6 +89,9 @@ class DashboardActivity : AppCompatActivity() {
         }
         historyButton.setOnClickListener {
             startActivity(Intent(this, HistoryActivity::class.java))
+        }
+        settingsButton.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
     }
 
