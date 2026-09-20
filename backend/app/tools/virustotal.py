@@ -12,6 +12,17 @@ logger = logging.getLogger(__name__)
 
 VT_URL_ENDPOINT = "https://www.virustotal.com/api/v3/urls/{url_id}"
 
+# Ignore 1–2 vendor flags: that is common background noise on popular sites.
+VIRUSTOTAL_MALICIOUS_THRESHOLD = 3
+
+
+def _verdict(malicious_votes: int) -> str:
+    if malicious_votes >= VIRUSTOTAL_MALICIOUS_THRESHOLD:
+        return "malicious"
+    if malicious_votes > 0:
+        return "low_confidence"
+    return "clean"
+
 
 def _get_api_key() -> str | None:
     key = os.getenv("VIRUSTOTAL_API_KEY")
@@ -57,7 +68,7 @@ def check_url(url: str) -> dict[str, object]:
             stats = response.json()["data"]["attributes"]["last_analysis_stats"]
             malicious = int(stats.get("malicious", 0))
             total = sum(int(v) for v in stats.values())
-            status = "malicious" if malicious > 0 else "clean"
+            status = _verdict(malicious)
             return {
                 "source": "virustotal",
                 "status": status,
@@ -65,6 +76,7 @@ def check_url(url: str) -> dict[str, object]:
                 "malicious_votes": malicious,
                 "total_votes": total,
                 "analysis_stats": stats,
+                "threshold": VIRUSTOTAL_MALICIOUS_THRESHOLD,
                 "stubbed": False,
             }
     except httpx.HTTPError as exc:

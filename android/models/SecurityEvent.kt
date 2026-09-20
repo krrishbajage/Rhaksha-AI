@@ -20,7 +20,9 @@ data class SecurityEvent(
     val timestamp: String,
     val metadata: Map<String, Any> = emptyMap(),
     @Transient val analysisStatus: AnalysisStatus = AnalysisStatus.PENDING,
-    @Transient val riskReport: RiskReport? = null
+    @Transient val riskReport: RiskReport? = null,
+    @Transient val displayRisk: String = "PENDING",
+    @Transient val failureReason: String? = null
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -35,7 +37,9 @@ data class SecurityEvent(
         analysisStatus = AnalysisStatus.valueOf(
             parcel.readString() ?: AnalysisStatus.PENDING.name
         ),
-        riskReport = parcel.readParcelable(RiskReport::class.java.classLoader)
+        riskReport = parcel.readParcelable(RiskReport::class.java.classLoader),
+        displayRisk = parcel.readString() ?: "PENDING",
+        failureReason = parcel.readString()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -49,6 +53,8 @@ data class SecurityEvent(
         parcel.writeBundle(mapToBundle(metadata))
         parcel.writeString(analysisStatus.name)
         parcel.writeParcelable(riskReport, flags)
+        parcel.writeString(displayRisk)
+        parcel.writeString(failureReason)
     }
 
     override fun describeContents(): Int = 0

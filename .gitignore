@@ -2,6 +2,7 @@
 **/build/
 .gradle/
 .gradle-user/
+.gradle-user-home/
 .gradle-user-caches/
 captures/
 **/captures/

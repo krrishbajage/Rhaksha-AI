@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.raksha.ai.R
-import com.raksha.ai.models.SecurityEvent
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.raksha.ai.data.RakshaApplication
 import com.raksha.ai.notification.RakshaNotificationListenerService
-import com.raksha.ai.notification.SecurityEventBus
+import kotlinx.coroutines.launch
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -22,12 +25,8 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var accessBanner: View
     private lateinit var enableAccessButton: Button
     private val adapter = SecurityEventAdapter()
-
-    private val eventListener: (SecurityEvent) -> Unit = { event ->
-        runOnUiThread {
-            addIncomingEvent(event)
-            updateEmptyState()
-        }
+    private val viewModel: DashboardViewModel by viewModels {
+        DashboardViewModelFactory((application as RakshaApplication).repository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +43,14 @@ class DashboardActivity : AppCompatActivity() {
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.setHasFixedSize(true)
 
-        adapter.submitList(SecurityEventBus.getEvents())
-        updateEmptyState()
+        lifecycleScope.launch {
+            repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    adapter.submitList(state.events)
+                    updateEmptyState()
+                }
+            }
+        }
 
         enableAccessButton.setOnClickListener {
             startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
@@ -54,38 +59,17 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        SecurityEventBus.addListener(eventListener)
         updateAccessBanner()
         updateEmptyState()
     }
 
     override fun onStop() {
-        SecurityEventBus.removeListener(eventListener)
         super.onStop()
     }
 
     override fun onResume() {
         super.onResume()
         updateAccessBanner()
-    }
-
-    private fun addIncomingEvent(event: SecurityEvent) {
-        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-        val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
-        val firstVisibleView = layoutManager.findViewByPosition(firstVisiblePosition)
-        val topOffset = firstVisibleView?.top ?: 0
-
-        val inserted = adapter.upsertEvent(event)
-
-        if (!inserted) {
-            return
-        }
-
-        if (firstVisiblePosition == RecyclerView.NO_POSITION || firstVisiblePosition <= 1) {
-            recyclerView.scrollToPosition(0)
-        } else {
-            layoutManager.scrollToPositionWithOffset(firstVisiblePosition + 1, topOffset)
-        }
     }
 
     private fun updateEmptyState() {

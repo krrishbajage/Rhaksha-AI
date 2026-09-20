@@ -28,7 +28,7 @@ class InvestigationState(TypedDict, total=False):
     evidence: list[dict[str, Any]]
     risk_score: float
     risk_level: str
-    scam_category: str
+    scam_category: str 
     explanation: str
     recommended_action: str
     risk_report: RiskReport

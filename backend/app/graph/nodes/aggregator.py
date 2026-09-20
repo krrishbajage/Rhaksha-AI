@@ -143,7 +143,7 @@ def _append_url_evidence(evidence: list[dict[str, Any]], report: dict[str, Any])
 
 def _append_attachment_evidence(evidence: list[dict[str, Any]], report: dict[str, Any]) -> None:
     for finding in report.get("findings", []):
-        if finding.get("dangerous_extension"):
+        if finding.get("suspicious") or finding.get("dangerous_extension"):
             evidence.append(
                 {
                     "type": "attachment",

@@ -59,11 +59,15 @@ def check_url(url: str) -> dict[str, object]:
             response.raise_for_status()
             data = response.json()
             matches = data.get("matches", [])
+            threat_types = sorted(
+                {str(match.get("threatType")) for match in matches if match.get("threatType")}
+            )
             return {
                 "source": "safe_browsing",
                 "status": "malicious" if matches else "clean",
                 "url": url,
                 "threats": matches,
+                "threat_types": threat_types,
                 "stubbed": False,
             }
     except httpx.HTTPError as exc:
