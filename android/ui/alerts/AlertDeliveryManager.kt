@@ -101,6 +101,7 @@ class AlertDeliveryManager(
         ).apply {
             enableVibration(true)
             vibrationPattern = longArrayOf(0, 240, 120, 240)
+            setBypassDnd(false)
             lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         }
         val discreet = NotificationChannel(
@@ -111,6 +112,7 @@ class AlertDeliveryManager(
             setSound(null, null)
             enableVibration(true)
             vibrationPattern = longArrayOf(0, 80)
+            setBypassDnd(false)
             lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         }
         val silent = NotificationChannel(
@@ -120,6 +122,7 @@ class AlertDeliveryManager(
         ).apply {
             setSound(null, null)
             enableVibration(false)
+            setBypassDnd(false)
             lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         }
         manager.createNotificationChannels(listOf(loud, discreet, silent))
