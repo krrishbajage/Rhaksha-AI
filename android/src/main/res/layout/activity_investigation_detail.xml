@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView style="@style/Text.Raksha.Label" android:text="@string/status_label" />
+                <TextView android:id="@+id/detailStatus" style="@style/Text.Raksha.Value" />
+
+                <TextView style="@style/Text.Raksha.Label" android:layout_marginTop="14dp" android:text="@string/risk_score_label" />
+                <TextView android:id="@+id/detailRiskScore" style="@style/Text.Raksha.Value" />
+
+                <TextView style="@style/Text.Raksha.Label" android:layout_marginTop="14dp" android:text="@string/risk_level_label" />
+                <TextView android:id="@+id/detailRiskLevel" style="@style/Text.Raksha.Value" />
+
+                <TextView style="@style/Text.Raksha.Label" android:layout_marginTop="14dp" android:text="@string/scam_category_label" />
+                <TextView android:id="@+id/detailCategory" style="@style/Text.Raksha.Value" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView style="@style/Text.Raksha.Label" android:text="@string/source_app_label" />
+                <TextView android:id="@+id/detailSourceApp" style="@style/Text.Raksha.Value" />
+
+                <TextView style="@style/Text.Raksha.Label" android:layout_marginTop="14dp" android:text="@string/sender_label" />
+                <TextView android:id="@+id/detailSender" style="@style/Text.Raksha.Value" />
+
+                <TextView style="@style/Text.Raksha.Label" android:layout_marginTop="14dp" android:text="@string/message_label" />
+                <TextView android:id="@+id/detailMessage" style="@style/Text.Raksha.Value" />
+
+                <TextView style="@style/Text.Raksha.Label" android:layout_marginTop="14dp" android:text="@string/timestamp_label" />
+                <TextView android:id="@+id/detailTimestamp" style="@style/Text.Raksha.Value" />
+
+                <TextView style="@style/Text.Raksha.Label" android:layout_marginTop="14dp" android:text="@string/urls_label" />
+                <TextView android:id="@+id/detailUrls" style="@style/Text.Raksha.Value" />
+
+                <TextView style="@style/Text.Raksha.Label" android:layout_marginTop="14dp" android:text="@string/attachments_label" />
+                <TextView android:id="@+id/detailAttachments" style="@style/Text.Raksha.Value" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView style="@style/Text.Raksha.Label" android:text="@string/explanation_label" />
+                <TextView android:id="@+id/detailExplanation" style="@style/Text.Raksha.Value" />
+
+                <TextView style="@style/Text.Raksha.Label" android:layout_marginTop="14dp" android:text="@string/action_label" />
+                <TextView android:id="@+id/detailAction" style="@style/Text.Raksha.Value" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</ScrollView>

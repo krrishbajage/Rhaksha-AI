@@ -11,8 +11,12 @@ import kotlinx.coroutines.launch
 class RakshaApplication : Application() {
     lateinit var repository: SecurityRepository
         private set
+    lateinit var settingsStore: SettingsStore
+        private set
+
     override fun onCreate() {
         super.onCreate()
+        settingsStore = SettingsStore(this)
         val database = Room.databaseBuilder(this, RakshaDatabase::class.java, "raksha-events.db").build()
         repository = SecurityRepository(database.events(), ApiClient.securityApi)
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch { repository.recoverInterrupted() }

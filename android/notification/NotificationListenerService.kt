@@ -7,6 +7,7 @@ import android.util.Log
 import com.raksha.ai.models.AnalysisStatus
 import com.raksha.ai.models.SecurityEvent
 import com.raksha.ai.data.RakshaApplication
+import com.raksha.ai.ui.alerts.AlertDeliveryManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -56,7 +57,9 @@ class RakshaNotificationListenerService : NotificationListenerService() {
     private fun analyzeInBackground(event: SecurityEvent) {
         serviceScope.launch {
             try {
-                (application as RakshaApplication).repository.capture(event)
+                val app = application as RakshaApplication
+                val result = app.repository.capture(event)
+                AlertDeliveryManager(applicationContext, app.settingsStore).showAnalysisResult(result)
             } catch (error: Exception) {
                 // Repository owns persistence and failures. Never include message or sender in logs.
                 Log.e(TAG, "Event analysis pipeline failed for id=${event.event_id}", error)
