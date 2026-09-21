@@ -10,7 +10,11 @@ object ApiClient {
 
     private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(15, TimeUnit.SECONDS)
+        // A complete analysis performs message classification and explanation
+        // generation.  Provider latency can exceed the original 15-second
+        // read window, so keep the phone connected long enough to receive a
+        // real report while retaining a bounded timeout.
+        .readTimeout(75, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
         .build()
 

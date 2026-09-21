@@ -3,15 +3,13 @@
 from __future__ import annotations
 
 import json
-import os
-
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel, Field
 
 from app.graph.prompts import EXPLANATION_PROMPT
 from app.graph.state import InvestigationState
 from app.schemas.risk_report import RiskReport
+from app.services.analysis_control import AnalysisUnavailable, get_controller
 
 
 class ExplanationOutput(BaseModel):
@@ -19,33 +17,28 @@ class ExplanationOutput(BaseModel):
     recommended_action: str = Field(description="Short recommended action for the user.")
 
 
-def _build_llm() -> ChatGoogleGenerativeAI:
-    api_key = os.getenv("GOOGLE_API_KEY")
-    if not api_key or not api_key.strip():
-        raise RuntimeError(
-            "GOOGLE_API_KEY is missing. Get a free key from https://aistudio.google.com "
-            "and add it to your .env file."
-        )
-    return ChatGoogleGenerativeAI(
-        model=os.getenv("GEMINI_MODEL", "gemini-3.6-flash"),
-        google_api_key=api_key.strip(),
-        temperature=0.2,
-    )
-
-
 def explanation_agent_node(state: InvestigationState) -> dict[str, object]:
-    llm = _build_llm().with_structured_output(ExplanationOutput)
+    message_report = state.get("message_report") or {}
+    if state.get("run_message_agent") and message_report.get("error") and not (
+        state.get("url_report") or state.get("attachment_report")
+    ):
+        # A text-only event cannot be safely classified without its required message analysis.
+        raise AnalysisUnavailable("Message analysis is unavailable")
     payload = {
         "risk_score": state.get("risk_score"),
         "risk_level": state.get("risk_level"),
         "scam_category": state.get("scam_category"),
         "evidence": state.get("evidence", []),
     }
-    output: ExplanationOutput = llm.invoke(
-        [
+    output: ExplanationOutput = get_controller().invoke_structured(
+        schema=ExplanationOutput,
+        request_id=state.get("request_id", state["event"].event_id),
+        agent="explanation_agent",
+        temperature=0.2,
+        messages=[
             SystemMessage(content=EXPLANATION_PROMPT),
             HumanMessage(content=json.dumps(payload, indent=2)),
-        ]
+        ],
     )
 
     risk_report = RiskReport(

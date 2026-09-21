@@ -36,10 +36,7 @@ def _encode_url_id(url: str) -> str:
 def check_url(url: str) -> dict[str, object]:
     api_key = _get_api_key()
     if not api_key:
-        logger.warning(
-            "VIRUSTOTAL_API_KEY missing; returning stubbed unknown result for %s",
-            url,
-        )
+        logger.warning("VIRUSTOTAL_API_KEY missing; returning stubbed unknown result")
         return {
             "source": "virustotal",
             "status": "unknown",
@@ -80,7 +77,7 @@ def check_url(url: str) -> dict[str, object]:
                 "stubbed": False,
             }
     except httpx.HTTPError as exc:
-        logger.warning("VirusTotal lookup failed for %s: %s", url, exc)
+        logger.warning("VirusTotal lookup failed: error_type=%s", type(exc).__name__)
         return {
             "source": "virustotal",
             "status": "unknown",

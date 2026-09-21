@@ -19,6 +19,7 @@ class InvestigationState(TypedDict, total=False):
     """Shared state passed between LangGraph nodes."""
 
     event: SecurityEvent
+    request_id: str
     run_message_agent: bool
     run_url_agent: bool
     run_attachment_agent: bool

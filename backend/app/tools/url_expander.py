@@ -29,7 +29,7 @@ def expand_url(url: str) -> dict[str, object]:
                 "status_code": response.status_code,
             }
     except httpx.HTTPError as exc:
-        logger.warning("URL expand failed for %s: %s", url, exc)
+        logger.warning("URL expansion failed: error_type=%s", type(exc).__name__)
         return {
             "original_url": url,
             "final_url": url,

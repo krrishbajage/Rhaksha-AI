@@ -22,10 +22,7 @@ def _get_api_key() -> str | None:
 def check_url(url: str) -> dict[str, object]:
     api_key = _get_api_key()
     if not api_key:
-        logger.warning(
-            "SAFE_BROWSING_API_KEY missing; returning stubbed unknown result for %s",
-            url,
-        )
+        logger.warning("SAFE_BROWSING_API_KEY missing; returning stubbed unknown result")
         return {
             "source": "safe_browsing",
             "status": "unknown",
@@ -71,7 +68,7 @@ def check_url(url: str) -> dict[str, object]:
                 "stubbed": False,
             }
     except httpx.HTTPError as exc:
-        logger.warning("Safe Browsing lookup failed for %s: %s", url, exc)
+        logger.warning("Safe Browsing lookup failed: error_type=%s", type(exc).__name__)
         return {
             "source": "safe_browsing",
             "status": "unknown",
