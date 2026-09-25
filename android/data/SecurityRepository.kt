@@ -1,5 +1,6 @@
 package com.raksha.ai.data
 
+import android.util.Log
 import com.raksha.ai.models.AnalysisStatus
 import com.raksha.ai.models.SecurityEvent
 import com.raksha.ai.network.SecurityApi
@@ -30,6 +31,11 @@ class SecurityRepository(private val dao: SecurityEventDao, private val api: Sec
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (error: Exception) {
+            // Keep diagnostic output useful without exposing notification content.
+            Log.w(
+                TAG,
+                "Backend analysis failed event_id=${event.event_id} error_type=${error.javaClass.simpleName} detail=${boundedReason(error.message)}",
+            )
             val failed = event.copy(analysisStatus = AnalysisStatus.FAILED,
                 displayRisk = "COULDN'T VERIFY", failureReason = boundedReason(error.message))
             writeMutex.withLock { persist(failed) }
@@ -43,5 +49,8 @@ class SecurityRepository(private val dao: SecurityEventDao, private val api: Sec
     }
 
     private fun boundedReason(reason: String?): String = (reason ?: "Couldn't verify").take(240)
-    companion object { const val RETENTION_MS = 14L * 24 * 60 * 60 * 1000 }
+    companion object {
+        private const val TAG = "RAKSHA"
+        const val RETENTION_MS = 14L * 24 * 60 * 60 * 1000
+    }
 }

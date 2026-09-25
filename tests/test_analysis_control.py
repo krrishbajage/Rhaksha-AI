@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -12,7 +13,12 @@ from pydantic import BaseModel
 from app.api import events
 from app.schemas.risk_report import RiskReport
 from app.schemas.security_event import SecurityEvent
-from app.services.analysis_control import AnalysisController, AnalysisUnavailable, ControlSettings
+from app.services.analysis_control import (
+    AnalysisController,
+    AnalysisUnavailable,
+    ControlSettings,
+    is_daily_quota_exceeded,
+)
 
 
 class Output(BaseModel):
@@ -29,6 +35,7 @@ def settings(**overrides: object) -> ControlSettings:
         "llm_retry_count": 0,
         "llm_retry_base_seconds": 0.01,
         "model_cooldown_seconds": 0.01,
+        "daily_quota_cooldown_seconds": 21600.0,
     }
     defaults.update(overrides)
     return ControlSettings(**defaults)  # type: ignore[arg-type]
@@ -73,6 +80,25 @@ def test_multiple_rate_limited_models_reach_available_model(monkeypatch: pytest.
         }),
     )
     assert result.value == "ok"
+
+
+def test_daily_quota_model_is_cooled_down_before_overflow(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("GOOGLE_API_KEY", "test-key")
+    monkeypatch.setenv("GEMINI_MODELS", "primary,overflow")
+    controller = AnalysisController(settings())
+    quota_error = RuntimeError("GenerateRequestsPerDayPerProjectPerModel-FreeTier requests_per_day")
+    result = controller.invoke_structured(
+        schema=Output, messages=[], temperature=0, request_id="first", agent="test",
+        factory=factory({"primary": [quota_error], "overflow": ["fallback-ok"]}),
+    )
+    assert result.value == "fallback-ok"
+    assert is_daily_quota_exceeded(quota_error)
+    # The primary remains out of rotation for a subsequent request.
+    result = controller.invoke_structured(
+        schema=Output, messages=[], temperature=0, request_id="second", agent="test",
+        factory=factory({"primary": [], "overflow": ["still-overflow"]}),
+    )
+    assert result.value == "still-overflow"
 
 
 def test_all_models_exhausted_is_bounded(monkeypatch: pytest.MonkeyPatch):
@@ -122,7 +148,7 @@ def test_concurrent_endpoint_calls_keep_event_contexts_independent(monkeypatch: 
     controller = AnalysisController(settings(max_concurrent_analyses=5))
 
     class Workflow:
-        def invoke(self, state: dict[str, object]) -> dict[str, RiskReport]:
+        async def ainvoke(self, state: dict[str, object]) -> dict[str, RiskReport]:
             event = state["event"]
             assert isinstance(event, SecurityEvent)
             return {"risk_report": RiskReport(
@@ -140,7 +166,7 @@ def test_concurrent_endpoint_calls_keep_event_contexts_independent(monkeypatch: 
             message_text=f"message-{index}", urls=[f"https://{index}.example"], attachments=[],
             timestamp=f"2026-01-01T00:00:0{index}Z", metadata={},
         )
-        return events.analyze_security_event(event)
+        return asyncio.run(events.analyze_security_event(event))
 
     with ThreadPoolExecutor(max_workers=5) as executor:
         reports = list(executor.map(submit, range(5)))

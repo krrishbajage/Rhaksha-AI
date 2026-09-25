@@ -53,6 +53,7 @@ class ControlSettings:
     llm_retry_count: int
     llm_retry_base_seconds: float
     model_cooldown_seconds: float
+    daily_quota_cooldown_seconds: float
 
     @classmethod
     def from_env(cls) -> "ControlSettings":
@@ -65,6 +66,7 @@ class ControlSettings:
             llm_retry_count=_non_negative_int("GEMINI_RETRY_COUNT", 2),
             llm_retry_base_seconds=_positive_float("GEMINI_RETRY_BASE_SECONDS", 1),
             model_cooldown_seconds=_positive_float("GEMINI_MODEL_COOLDOWN_SECONDS", 60),
+            daily_quota_cooldown_seconds=_positive_float("GEMINI_DAILY_QUOTA_COOLDOWN_SECONDS", 21600),
         )
 
 
@@ -97,6 +99,17 @@ def is_rate_limited(error: BaseException) -> bool:
     return status == 429 or any(marker in text for marker in ("429", "resource_exhausted", "rate limit", "quota", "too many requests"))
 
 
+def is_daily_quota_exceeded(error: BaseException) -> bool:
+    """Match Gemini's GenerateRequestsPerDay quota responses.
+
+    The production error captured for this account contains
+    ``GenerateRequestsPerDayPerProjectPerModel-FreeTier`` and
+    ``requests_per_day``.  Match those precise, non-content markers.
+    """
+    text = str(error).lower().replace("_", "")
+    return "generaterequestsperday" in text or "requestsperday" in text
+
+
 class AnalysisController:
     """Global provider capacity only; request event/state never lives here."""
 
@@ -108,7 +121,6 @@ class AnalysisController:
         self._lock = threading.Lock()
         self._request_times: dict[str, deque[float]] = {}
         self._cooldowns: dict[str, float] = {}
-        self._cursor = 0
 
     @contextmanager
     def analysis_slot(self, request_id: str) -> Iterator[None]:
@@ -128,15 +140,25 @@ class AnalysisController:
         with self._lock:
             self._cooldowns[model] = self._clock() + self.settings.model_cooldown_seconds
 
-    def _reserve_model_rate_slot(self, models: tuple[str, ...], deadline: float) -> str:
+    def _mark_daily_exhausted(self, model: str) -> None:
+        with self._lock:
+            self._cooldowns[model] = self._clock() + self.settings.daily_quota_cooldown_seconds
+
+    def _reserve_model_rate_slot(
+        self,
+        models: tuple[str, ...],
+        deadline: float,
+        excluded_models: set[str],
+    ) -> str:
+        available_models = tuple(model for model in models if model not in excluded_models)
+        if not available_models:
+            raise AnalysisUnavailable("All configured Gemini models failed for this analysis")
         while True:
             now = self._clock()
             with self._lock:
                 rates = configured_model_rpm()
                 soonest_wait: float | None = None
-                for offset in range(len(models)):
-                    index = (self._cursor + offset) % len(models)
-                    model = models[index]
+                for model in available_models:
                     if self._cooldowns.get(model, 0) > now:
                         wait = self._cooldowns[model] - now
                     else:
@@ -146,7 +168,6 @@ class AnalysisController:
                         limit = rates.get(model, self.settings.max_llm_requests_per_minute)
                         if len(request_times) < limit:
                             request_times.append(now)
-                            self._cursor = (index + 1) % len(models)
                             return model
                         wait = 60 - (now - request_times[0])
                     soonest_wait = wait if soonest_wait is None else min(soonest_wait, wait)
@@ -172,10 +193,14 @@ class AnalysisController:
         deadline = self._clock() + self.settings.max_analysis_queue_wait_seconds
         attempts = 0
         last_error: BaseException | None = None
+        attempted_models: set[str] = set()
         max_attempts = max(len(models), 1) * (self.settings.llm_retry_count + 1)
 
         while attempts < max_attempts and self._clock() < deadline:
-            model = self._reserve_model_rate_slot(models, deadline)
+            try:
+                model = self._reserve_model_rate_slot(models, deadline, attempted_models)
+            except AnalysisUnavailable:
+                break
             attempts += 1
             if not self._llm_slots.acquire(timeout=max(0.0, deadline - self._clock())):
                 break
@@ -188,7 +213,14 @@ class AnalysisController:
                 return result
             except Exception as error:  # provider exceptions differ by SDK version
                 last_error = error
-                if is_rate_limited(error):
+                # A single analysis always advances through its configured
+                # primary-to-overflow chain instead of retrying a model that
+                # just failed, even if a short RPM cooldown has elapsed.
+                attempted_models.add(model)
+                if is_daily_quota_exceeded(error):
+                    self._mark_daily_exhausted(model)
+                    logger.warning("daily_quota_exhausted request_id=%s agent=%s model=%s", request_id, agent, model)
+                elif is_rate_limited(error):
                     self._mark_rate_limited(model)
                     logger.warning("rate_limit request_id=%s agent=%s model=%s", request_id, agent, model)
                 else:
@@ -210,7 +242,8 @@ def get_controller() -> AnalysisController:
     global _controller, _controller_signature
     keys = ("MAX_CONCURRENT_ANALYSES", "MAX_ANALYSIS_QUEUE_WAIT_SECONDS", "MAX_CONCURRENT_LLM_REQUESTS",
         "MAX_LLM_REQUESTS_PER_MINUTE", "GEMINI_TIMEOUT_SECONDS", "GEMINI_RETRY_COUNT",
-        "GEMINI_RETRY_BASE_SECONDS", "GEMINI_MODEL_COOLDOWN_SECONDS")
+        "GEMINI_RETRY_BASE_SECONDS", "GEMINI_MODEL_COOLDOWN_SECONDS",
+        "GEMINI_DAILY_QUOTA_COOLDOWN_SECONDS")
     signature = tuple((key, os.getenv(key)) for key in keys)
     with _controller_lock:
         if _controller is None or signature != _controller_signature:

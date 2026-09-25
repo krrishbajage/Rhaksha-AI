@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from typing import Any
 from urllib.parse import urlparse, urlunparse
 
@@ -121,7 +122,7 @@ def _signals_for_finding(finding: dict[str, Any]) -> list[dict[str, Any]]:
     return signals
 
 
-def analyze_urls(urls: list[str]) -> dict[str, Any]:
+async def analyze_urls(urls: list[str]) -> dict[str, Any]:
     """Run URL-agent logic on a list of URLs without the rest of the graph."""
     event = SecurityEvent(
         event_id="url-agent-direct",
@@ -132,86 +133,81 @@ def analyze_urls(urls: list[str]) -> dict[str, Any]:
         attachments=[],
         timestamp="1970-01-01T00:00:00Z",
     )
-    return url_agent_node({"event": event, "run_url_agent": True})
+    return await url_agent_node({"event": event, "run_url_agent": True})
 
 
-def url_agent_node(state: InvestigationState) -> dict[str, dict]:
+async def _inspect_url(raw_url: str) -> dict[str, Any]:
+    try:
+        normalized = normalize_url(raw_url)
+        target = normalized or raw_url
+        empty_expansion = {
+            "original_url": raw_url,
+            "final_url": raw_url,
+            "redirect_count": 0,
+            "redirect_chain": [raw_url],
+            "status_code": None,
+        }
+        expansion, safe_browsing_raw, virustotal_raw = await asyncio.gather(
+            expand_url(normalized) if normalized else asyncio.sleep(0, result=empty_expansion),
+            safe_browsing_check(target),
+            virustotal_check(target),
+        )
+        final_url = str(expansion.get("final_url") or normalized or raw_url)
+        safe_browsing = _merge_reputation([safe_browsing_raw], "safe_browsing")
+        virustotal = _merge_reputation([virustotal_raw], "virustotal")
+        typosquat = detect_typosquat(final_url) if final_url else detect_typosquat(raw_url)
+        if not typosquat.get("typosquat_detected"):
+            original_typosquat = detect_typosquat(raw_url)
+            if original_typosquat.get("typosquat_detected"):
+                typosquat = original_typosquat
+
+        finding = {
+            "original_url": raw_url,
+            "normalized_url": normalized,
+            "final_url": final_url,
+            "expansion": expansion,
+            "typosquat": typosquat,
+            "safe_browsing": safe_browsing,
+            "virustotal": virustotal,
+        }
+        finding["signals"] = _signals_for_finding(finding)
+        return finding
+    except Exception as exc:  # noqa: BLE001 — isolation tests must never crash the agent
+        return {
+            "original_url": raw_url,
+            "normalized_url": raw_url,
+            "final_url": raw_url,
+            "expansion": {"error": str(exc)},
+            "typosquat": {
+                "typosquat_detected": False,
+                "domain": "",
+                "similar_to": None,
+                "similarity_score": 0,
+            },
+            "safe_browsing": {
+                "source": "safe_browsing",
+                "status": "unknown",
+                "url": raw_url,
+                "threats": [],
+                "error": str(exc),
+            },
+            "virustotal": {
+                "source": "virustotal",
+                "status": "unknown",
+                "url": raw_url,
+                "error": str(exc),
+            },
+            "signals": [],
+            "handled_gracefully": True,
+        }
+
+
+async def url_agent_node(state: InvestigationState) -> dict[str, dict]:
     if not state.get("run_url_agent"):
         return {}
     event = state["event"]
-    findings: list[dict] = []
-
-    for raw_url in event.urls or []:
-        try:
-            normalized = normalize_url(raw_url)
-            expansion = expand_url(normalized) if normalized else {
-                "original_url": raw_url,
-                "final_url": raw_url,
-                "redirect_count": 0,
-                "redirect_chain": [raw_url],
-                "status_code": None,
-            }
-            final_url = str(expansion.get("final_url") or normalized or raw_url)
-            reputation_targets = []
-            for candidate in (normalized, raw_url, final_url):
-                if candidate and candidate not in reputation_targets:
-                    reputation_targets.append(candidate)
-
-            safe_browsing = _merge_reputation(
-                [safe_browsing_check(target) for target in reputation_targets],
-                "safe_browsing",
-            )
-            virustotal = _merge_reputation(
-                [virustotal_check(target) for target in reputation_targets],
-                "virustotal",
-            )
-            typosquat = detect_typosquat(final_url) if final_url else detect_typosquat(raw_url)
-            if not typosquat.get("typosquat_detected"):
-                original_typosquat = detect_typosquat(raw_url)
-                if original_typosquat.get("typosquat_detected"):
-                    typosquat = original_typosquat
-
-            finding = {
-                "original_url": raw_url,
-                "normalized_url": normalized,
-                "final_url": final_url,
-                "expansion": expansion,
-                "typosquat": typosquat,
-                "safe_browsing": safe_browsing,
-                "virustotal": virustotal,
-            }
-            finding["signals"] = _signals_for_finding(finding)
-            findings.append(finding)
-        except Exception as exc:  # noqa: BLE001 — isolation tests must never crash the agent
-            findings.append(
-                {
-                    "original_url": raw_url,
-                    "normalized_url": raw_url,
-                    "final_url": raw_url,
-                    "expansion": {"error": str(exc)},
-                    "typosquat": {
-                        "typosquat_detected": False,
-                        "domain": "",
-                        "similar_to": None,
-                        "similarity_score": 0,
-                    },
-                    "safe_browsing": {
-                        "source": "safe_browsing",
-                        "status": "unknown",
-                        "url": raw_url,
-                        "threats": [],
-                        "error": str(exc),
-                    },
-                    "virustotal": {
-                        "source": "virustotal",
-                        "status": "unknown",
-                        "url": raw_url,
-                        "error": str(exc),
-                    },
-                    "signals": [],
-                    "handled_gracefully": True,
-                }
-            )
+    urls = list(event.urls or [])
+    findings = list(await asyncio.gather(*[_inspect_url(raw_url) for raw_url in urls])) if urls else []
 
     return {
         "url_report": {

@@ -18,13 +18,13 @@ router = APIRouter(prefix="/api/events", tags=["events"])
 
 
 @router.post("/analyze", response_model=RiskReport)
-def analyze_security_event(event: SecurityEvent) -> RiskReport:
+async def analyze_security_event(event: SecurityEvent) -> RiskReport:
     request_id = uuid.uuid4().hex
     logger.info("event_received request_id=%s event_id=%s", request_id, event.event_id)
     try:
         # The compiled graph and its mutable state are request-local.
         with get_controller().analysis_slot(request_id):
-            result = build_workflow().invoke({"event": event, "request_id": request_id})
+            result = await build_workflow().ainvoke({"event": event, "request_id": request_id})
     except AnalysisUnavailable as exc:
         raise HTTPException(status_code=503, detail="Analysis is temporarily unavailable; please try again later.") from exc
     except RuntimeError as exc:
