@@ -23,17 +23,18 @@ class RakshaNotificationListenerService : NotificationListenerService() {
     private val deduper = RecentNotificationDeduper()
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
-        if (sbn.packageName != WHATSAPP_PACKAGE) return
+        // Allow WhatsApp, Google Messages (RCS), and Samsung Messages
+        if (sbn.packageName !in SUPPORTED_PACKAGES) return
 
         val skipReason = nonMessageSkipReason(sbn)
         if (skipReason != null) {
-            Log.d(TAG, "Skipping unsupported WhatsApp notification: $skipReason")
+            Log.d(TAG, "Skipping unsupported notification from ${sbn.packageName}: $skipReason")
             return
         }
 
         val event = NotificationParser.parse(sbn)
         if (event.message_text.isBlank() && event.urls.isEmpty() && event.attachments.isEmpty()) {
-            Log.d(TAG, "Skipping empty WhatsApp notification")
+            Log.d(TAG, "Skipping empty notification from ${sbn.packageName}")
             return
         }
 
@@ -41,7 +42,7 @@ class RakshaNotificationListenerService : NotificationListenerService() {
         if (deduper.alreadySeen(fingerprints)) {
             Log.d(
                 TAG,
-                "Skipping duplicate WhatsApp notification within ${RecentNotificationDeduper.WINDOW_MS}ms"
+                "Skipping duplicate notification within ${RecentNotificationDeduper.WINDOW_MS}ms"
             )
             return
         }
@@ -61,7 +62,6 @@ class RakshaNotificationListenerService : NotificationListenerService() {
                 val result = app.repository.capture(event)
                 AlertDeliveryManager(applicationContext, app.settingsStore).showAnalysisResult(result)
             } catch (error: Exception) {
-                // Repository owns persistence and failures. Never include message or sender in logs.
                 Log.e(TAG, "Event analysis pipeline failed for id=${event.event_id}", error)
             }
         }
@@ -69,7 +69,21 @@ class RakshaNotificationListenerService : NotificationListenerService() {
 
     companion object {
         private const val TAG = "RAKSHA"
-        private const val WHATSAPP_PACKAGE = "com.whatsapp"
+        const val WHATSAPP_PACKAGE = "com.whatsapp"
+        const val GOOGLE_MESSAGES_PACKAGE = "com.google.android.apps.messaging"
+        const val SAMSUNG_MESSAGES_PACKAGE = "com.samsung.android.messaging"
+
+        val SUPPORTED_PACKAGES = setOf(
+            WHATSAPP_PACKAGE,
+            GOOGLE_MESSAGES_PACKAGE,
+            SAMSUNG_MESSAGES_PACKAGE
+        )
+
+        // Matches background worker/sync foreground service alerts
+        private val BACKGROUND_WORK_TEXT = Regex(
+            """doing work in (the )?background|checking for (new )?messages|syncing|synchroniz|messages are doing work""",
+            RegexOption.IGNORE_CASE
+        )
 
         private val CALL_TEXT = Regex(
             """
@@ -108,6 +122,37 @@ class RakshaNotificationListenerService : NotificationListenerService() {
             val summaryText = extras.getCharSequence(Notification.EXTRA_SUMMARY_TEXT)?.toString().orEmpty()
             val combined = "$title $text $summaryText"
 
+            // 1. Filter ongoing foreground services & persistent system alerts
+            if (sbn.isOngoing || (notification.flags and Notification.FLAG_ONGOING_EVENT != 0)) {
+                return "ongoing service notification"
+            }
+            if (!sbn.isClearable) {
+                return "non-clearable notification"
+            }
+
+            // 2. Filter non-message categories (service, progress, status, system)
+            if (category == Notification.CATEGORY_SERVICE ||
+                category == Notification.CATEGORY_PROGRESS ||
+                category == Notification.CATEGORY_STATUS ||
+                category == Notification.CATEGORY_SYSTEM
+            ) {
+                return "service/progress category ($category)"
+            }
+
+            // 3. Filter channels dedicated to background work or sync
+            if (channelId.contains("foreground", ignoreCase = true) ||
+                channelId.contains("background", ignoreCase = true) ||
+                channelId.contains("sync", ignoreCase = true)
+            ) {
+                return "background/sync channel ($channelId)"
+            }
+
+            // 4. Text match for background worker strings
+            if (BACKGROUND_WORK_TEXT.containsMatchIn(combined)) {
+                return "background work text"
+            }
+
+            // 5. Call & incoming call UI checks
             if (category == Notification.CATEGORY_CALL || category == Notification.CATEGORY_MISSED_CALL) {
                 return "category=$category"
             }
@@ -120,6 +165,8 @@ class RakshaNotificationListenerService : NotificationListenerService() {
             if (hasCallAction(notification)) {
                 return "call action buttons (Answer/Decline)"
             }
+
+            // 6. Group summaries & system event checks
             if (notification.flags and Notification.FLAG_GROUP_SUMMARY != 0) {
                 return "group summary flag"
             }
@@ -141,6 +188,7 @@ class RakshaNotificationListenerService : NotificationListenerService() {
             if (SYSTEM_EVENT_TEXT.containsMatchIn(combined)) {
                 return "non-message system event"
             }
+
             return null
         }
 

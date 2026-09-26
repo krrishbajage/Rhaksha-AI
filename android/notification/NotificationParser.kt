@@ -1,11 +1,11 @@
 package com.raksha.ai.notification
 
 import android.app.Notification
+import android.app.Person
 import android.os.Bundle
 import android.service.notification.StatusBarNotification
 import com.raksha.ai.models.AnalysisStatus
 import com.raksha.ai.models.SecurityEvent
-import android.app.Person
 import java.time.Instant
 import java.util.UUID
 
@@ -21,15 +21,27 @@ object NotificationParser {
         val sender = bounded(latest?.sender ?: extras.getCharSequence(Notification.EXTRA_TITLE)?.toString().orEmpty())
             .ifBlank { null }
 
+        // Normalizes Google Messages and Samsung Messages so LangGraph treats RCS as "sms"
+        val sourceApp = when (sbn.packageName) {
+            RakshaNotificationListenerService.WHATSAPP_PACKAGE -> "com.whatsapp"
+            RakshaNotificationListenerService.GOOGLE_MESSAGES_PACKAGE,
+            RakshaNotificationListenerService.SAMSUNG_MESSAGES_PACKAGE -> "sms"
+            else -> sbn.packageName
+        }
+
         return SecurityEvent(
             event_id = UUID.randomUUID().toString(),
-            source_app = sbn.packageName,
+            source_app = sourceApp,
             sender = sender,
             message_text = messageText,
             urls = UrlExtractor.extract(messageText),
             attachments = AttachmentDetector.detect(messageText),
             timestamp = Instant.ofEpochMilli(latest?.timestamp?.takeIf { it > 0 } ?: sbn.postTime).toString(),
-            metadata = mapOf("notification_key" to sbn.key, "post_time" to sbn.postTime),
+            metadata = mapOf(
+                "notification_key" to sbn.key,
+                "post_time" to sbn.postTime,
+                "channel" to if (sourceApp == "sms") "rcs" else "notification"
+            ),
             analysisStatus = AnalysisStatus.PENDING,
             displayRisk = "PENDING"
         )
@@ -45,9 +57,13 @@ object NotificationParser {
             val text = bundle.getCharSequence("text")?.toString().orEmpty()
             if (text.isBlank()) continue
             val person = bundle.getParcelable<Person>("sender_person")
-            return ParsedMessage(text, person?.name?.toString()
-                ?: bundle.getCharSequence("sender")?.toString()
-                ?: bundle.getCharSequence("sender_name")?.toString(), bundle.getLong("timestamp", 0L))
+            return ParsedMessage(
+                text,
+                person?.name?.toString()
+                    ?: bundle.getCharSequence("sender")?.toString()
+                    ?: bundle.getCharSequence("sender_name")?.toString(),
+                bundle.getLong("timestamp", 0L)
+            )
         }
         return null
     }

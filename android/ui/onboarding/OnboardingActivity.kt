@@ -17,6 +17,9 @@ class OnboardingActivity : AppCompatActivity() {
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { }
+    private val smsPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { completeOnboarding() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +33,7 @@ class OnboardingActivity : AppCompatActivity() {
             startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
         }
         findViewById<Button>(R.id.finishOnboardingButton).setOnClickListener {
-            (application as RakshaApplication).settingsStore.onboardingComplete = true
-            finish()
+            requestSmsPermissionIfNeeded()
         }
     }
 
@@ -41,5 +43,18 @@ class OnboardingActivity : AppCompatActivity() {
         ) {
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
+    }
+
+    private fun requestSmsPermissionIfNeeded() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+            smsPermissionLauncher.launch(Manifest.permission.RECEIVE_SMS)
+        } else {
+            completeOnboarding()
+        }
+    }
+
+    private fun completeOnboarding() {
+        (application as RakshaApplication).settingsStore.onboardingComplete = true
+        finish()
     }
 }

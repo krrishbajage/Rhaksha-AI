@@ -2,9 +2,39 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from app.graph.state import InvestigationState
+from app.schemas.security_event import SecurityEvent
+
+_DLT_SENDER_PATTERN = re.compile(r"^[A-Z]{2}-[A-Z]{6}$")
+_PHONE_SENDER_PATTERN = re.compile(r"^\+?[0-9]{7,15}$")
+
+
+def _append_sms_sender_evidence(
+    evidence: list[dict[str, Any]],
+    event: SecurityEvent,
+    message_report: dict[str, Any],
+) -> None:
+    if event.source_app != "sms" or not message_report.get("impersonation"):
+        return
+
+    sender = (event.sender or "").strip()
+    if _DLT_SENDER_PATTERN.fullmatch(sender) or not _PHONE_SENDER_PATTERN.fullmatch(sender):
+        return
+
+    evidence.append(
+        {
+            "type": "sms",
+            "signal": "sender_mismatch",
+            "weight": 20,
+            "detail": (
+                "Message claims to impersonate a trusted entity but was sent from a phone number, "
+                "not a registered DLT header."
+            ),
+        }
+    )
 
 
 def _append_message_evidence(evidence: list[dict[str, Any]], report: dict[str, Any]) -> None:
@@ -162,6 +192,7 @@ def aggregator_node(state: InvestigationState) -> dict[str, list[dict[str, Any]]
     url_report = state.get("url_report") or {}
     attachment_report = state.get("attachment_report") or {}
 
+    _append_sms_sender_evidence(evidence, state["event"], message_report)
     if message_report:
         _append_message_evidence(evidence, message_report)
     if url_report:

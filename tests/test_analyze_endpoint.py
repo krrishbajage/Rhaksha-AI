@@ -20,6 +20,9 @@ for _env_path in (
         break
 
 from app.main import app
+from app.api import events
+from app.graph.nodes import explanation_agent, message_agent
+from app.schemas.risk_report import RiskReport
 
 SCAM_EVENT = {
     "event_id": "test-hdfc-apk-001",
@@ -92,3 +95,42 @@ def test_analyze_benign_event_returns_low_risk_report(client: TestClient):
     assert report["scam_category"] == "none"
     assert report["explanation"]
     assert report["recommended_action"]
+
+
+def test_analyze_sms_event_returns_risk_report(client: TestClient, monkeypatch: pytest.MonkeyPatch):
+    class Controller:
+        def analysis_slot(self, _request_id: str):
+            from contextlib import nullcontext
+
+            return nullcontext()
+
+        def invoke_structured(self, *, schema: type, **_kwargs: object):
+            if schema.__name__ == "MessageAnalysis":
+                return schema(impersonation=True)
+            return schema(
+                explanation="SMS event analyzed.",
+                recommended_action="Verify the sender independently.",
+            )
+
+    controller = Controller()
+    monkeypatch.setattr(events, "get_controller", lambda: controller)
+    monkeypatch.setattr(message_agent, "get_controller", lambda: controller)
+    monkeypatch.setattr(explanation_agent, "get_controller", lambda: controller)
+
+    response = client.post(
+        "/api/events/analyze",
+        json={
+            "event_id": "sms-endpoint-test",
+            "source_app": "sms",
+            "sender": "+919876543210",
+            "message_text": "Your bank account is blocked",
+            "urls": [],
+            "attachments": [],
+            "timestamp": "2026-09-26T00:00:00Z",
+            "metadata": {"channel": "sms"},
+        },
+    )
+
+    assert response.status_code == 200, response.text
+    assert response.json()["risk_score"] == 40
+    assert response.json()["risk_level"] == "medium"
