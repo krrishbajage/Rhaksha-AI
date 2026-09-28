@@ -73,3 +73,6 @@ Thumbs.db
 # Local logs
 *.log
 *.hprof
+
+RAKSHA_AI_Android.json
+RAKSHA_AI_Backend.json
