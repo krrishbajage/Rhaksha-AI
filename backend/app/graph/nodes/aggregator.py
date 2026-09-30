@@ -203,17 +203,44 @@ def _append_email_evidence(evidence: list[dict[str, Any]], report: dict[str, Any
 
 def _append_attachment_evidence(evidence: list[dict[str, Any]], report: dict[str, Any]) -> None:
     for finding in report.get("findings", []):
-        if finding.get("suspicious") or finding.get("dangerous_extension"):
+        filename = finding.get("filename")
+
+        # VirusTotal hash detection takes priority
+        if finding.get("virustotal_status") == "malicious":
+            evidence.append(
+                {
+                    "type": "attachment",
+                    "signal": "vt_malicious_hash",
+                    "weight": 35,
+                    "detail": (
+                        f"VirusTotal flagged attachment '{filename}' as malicious "
+                        f"(SHA256: {finding.get('sha256')})."
+                    ),
+                    "filename": filename,
+                }
+            )
+
+        # Dangerous extensions and deceptive double-extensions
+        if finding.get("dangerous_extension") or finding.get("disguised_double_extension"):
             evidence.append(
                 {
                     "type": "attachment",
                     "signal": "dangerous_extension",
                     "weight": 35,
                     "detail": str(finding.get("risk_reason")),
-                    "filename": finding.get("filename"),
+                    "filename": filename,
                 }
             )
-
+        elif finding.get("suspicious") and finding.get("virustotal_status") != "malicious":
+            evidence.append(
+                {
+                    "type": "attachment",
+                    "signal": "dangerous_extension",
+                    "weight": 35,
+                    "detail": str(finding.get("risk_reason")),
+                    "filename": filename,
+                }
+            )
 
 def aggregator_node(state: InvestigationState) -> dict[str, list[dict[str, Any]]]:
     evidence: list[dict[str, Any]] = []
