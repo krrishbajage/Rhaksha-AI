@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from typing import Any
 from urllib.parse import urlparse, urlunparse
 
@@ -12,6 +13,8 @@ from app.tools.safe_browsing import check_url as safe_browsing_check
 from app.tools.similarity import detect_typosquat
 from app.tools.url_expander import expand_url
 from app.tools.virustotal import check_url as virustotal_check
+
+logger = logging.getLogger(__name__)
 
 THREAT_TYPE_LABELS = {
     "MALWARE": "malware",
@@ -202,12 +205,34 @@ async def _inspect_url(raw_url: str) -> dict[str, Any]:
         }
 
 
+MAX_URLS_PER_ANALYSIS = 5
+
+
 async def url_agent_node(state: InvestigationState) -> dict[str, dict]:
     if not state.get("run_url_agent"):
         return {}
     event = state["event"]
-    urls = list(event.urls or [])
-    findings = list(await asyncio.gather(*[_inspect_url(raw_url) for raw_url in urls])) if urls else []
+    raw_urls = list(event.urls or [])
+
+    # 1. Deduplicate preserving order
+    unique_urls = list(dict.fromkeys(raw_urls))
+
+    # 2. Cap to maximum 5 URLs
+    if len(unique_urls) > MAX_URLS_PER_ANALYSIS:
+        logger.info(
+            "urls_truncated_for_analysis original_count=%d capped_count=%d",
+            len(unique_urls),
+            MAX_URLS_PER_ANALYSIS,
+        )
+        urls_to_check = unique_urls[:MAX_URLS_PER_ANALYSIS]
+    else:
+        urls_to_check = unique_urls
+
+    findings = (
+        list(await asyncio.gather(*[_inspect_url(raw_url) for raw_url in urls_to_check]))
+        if urls_to_check
+        else []
+    )
 
     return {
         "url_report": {

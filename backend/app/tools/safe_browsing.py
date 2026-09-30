@@ -77,7 +77,7 @@ async def check_url(url: str) -> dict[str, object]:
     }
 
     try:
-        async with httpx.AsyncClient(timeout=2.0) as client:
+        async with httpx.AsyncClient(timeout=5.0) as client:
             response = await client.post(
                 SAFE_BROWSING_ENDPOINT,
                 params={"key": api_key},
