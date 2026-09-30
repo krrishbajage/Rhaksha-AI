@@ -17,10 +17,15 @@ for _env_path in (
 
 from fastapi import FastAPI
 
+from app.api.auth import router as auth_router
+from app.api.email import router as email_router
 from app.api.events import router as events_router
 
 app = FastAPI(title="RAKSHA AI Backend", version="0.1.0")
+
 app.include_router(events_router)
+app.include_router(auth_router)
+app.include_router(email_router)
 
 
 @app.get("/health")

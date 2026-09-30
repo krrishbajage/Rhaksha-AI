@@ -171,6 +171,36 @@ def _append_url_evidence(evidence: list[dict[str, Any]], report: dict[str, Any])
             )
 
 
+def _append_email_evidence(evidence: list[dict[str, Any]], report: dict[str, Any]) -> None:
+    if report.get("from_reply_to_mismatch"):
+        evidence.append(
+            {
+                "type": "email",
+                "signal": "from_reply_to_mismatch",
+                "weight": 25,
+                "detail": "Reply-To domain does not match the From domain.",
+            }
+        )
+    if report.get("auth_failed"):
+        evidence.append(
+            {
+                "type": "email",
+                "signal": "auth_failed",
+                "weight": 20,
+                "detail": "SPF, DKIM, or DMARC authentication did not pass.",
+            }
+        )
+    if report.get("display_name_mismatch"):
+        evidence.append(
+            {
+                "type": "email",
+                "signal": "display_name_mismatch",
+                "weight": 25,
+                "detail": "Display name references a known brand that does not match the From domain.",
+            }
+        )
+
+
 def _append_attachment_evidence(evidence: list[dict[str, Any]], report: dict[str, Any]) -> None:
     for finding in report.get("findings", []):
         if finding.get("suspicious") or finding.get("dangerous_extension"):
@@ -191,6 +221,7 @@ def aggregator_node(state: InvestigationState) -> dict[str, list[dict[str, Any]]
     message_report = state.get("message_report") or {}
     url_report = state.get("url_report") or {}
     attachment_report = state.get("attachment_report") or {}
+    email_report = state.get("email_report") or {}
 
     _append_sms_sender_evidence(evidence, state["event"], message_report)
     if message_report:
@@ -199,6 +230,8 @@ def aggregator_node(state: InvestigationState) -> dict[str, list[dict[str, Any]]
         _append_url_evidence(evidence, url_report)
     if attachment_report:
         _append_attachment_evidence(evidence, attachment_report)
+    if email_report:
+        _append_email_evidence(evidence, email_report)
 
     if not evidence:
         evidence.append(

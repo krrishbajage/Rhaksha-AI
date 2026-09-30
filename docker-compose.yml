@@ -10,6 +10,10 @@ services:
     volumes:
       - ./tests:/app/tests:ro
       - ./.env:/app/.env:ro
+      # OAuth refresh tokens and the small processed-email cache must survive
+      # backend container recreation, but are ignored by Git.
+      - ./data:/app/data
+      - ./backend/app:/app/app
 
   db:
     image: postgres:16-alpine

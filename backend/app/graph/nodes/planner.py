@@ -15,4 +15,5 @@ def planner_node(state: InvestigationState) -> dict[str, bool]:
         "run_message_agent": bool(message_text),
         "run_url_agent": bool(urls),
         "run_attachment_agent": bool(attachments),
+        "run_email_agent": event.source_app == "email",
     }
