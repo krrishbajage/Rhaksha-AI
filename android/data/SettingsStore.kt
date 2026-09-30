@@ -43,6 +43,12 @@ class SettingsStore(context: Context) {
         get() = prefs.getBoolean(KEY_ONBOARDING_COMPLETE, false)
         set(value) = prefs.edit().putBoolean(KEY_ONBOARDING_COMPLETE, value).apply()
 
+    var connectedGmailEmail: String?
+        get() = prefs.getString(KEY_CONNECTED_GMAIL_EMAIL, null)?.takeIf { it.isNotBlank() }
+        set(value) {
+            prefs.edit().putString(KEY_CONNECTED_GMAIL_EMAIL, value.orEmpty()).apply()
+        }
+
     fun meetingMode(): MeetingMode {
         val mode = enumValue(KEY_MEETING_MODE, MeetingMode.OFF)
         val endAt = prefs.getLong(KEY_MEETING_END_AT, 0L)
@@ -113,6 +119,7 @@ class SettingsStore(context: Context) {
         private const val KEY_FOLLOW_DND = "follow_dnd"
         private const val KEY_LOCK_SCREEN_PRIVACY = "lock_screen_privacy"
         private const val KEY_ONBOARDING_COMPLETE = "onboarding_complete"
+        private const val KEY_CONNECTED_GMAIL_EMAIL = "connected_gmail_email"
         private const val KEY_MEETING_MODE = "meeting_mode"
         private const val KEY_MEETING_END_AT = "meeting_end_at"
         private const val KEY_QUIET_ENABLED = "quiet_enabled"

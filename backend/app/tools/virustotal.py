@@ -88,7 +88,7 @@ async def check_url(url: str) -> dict[str, object]:
     headers = {"x-apikey": api_key}
 
     try:
-        async with httpx.AsyncClient(timeout=2.0) as client:
+        async with httpx.AsyncClient(timeout=5.0) as client:
             response = await client.get(VT_URL_ENDPOINT.format(url_id=url_id), headers=headers)
             if response.status_code == 404:
                 return {
@@ -162,7 +162,7 @@ async def check_file_hash(sha256_hash: str) -> dict[str, object]:
     headers = {"x-apikey": api_key}
 
     try:
-        async with httpx.AsyncClient(timeout=2.0) as client:
+        async with httpx.AsyncClient(timeout=5.0) as client:
             response = await client.get(VT_FILE_ENDPOINT.format(hash=clean_hash), headers=headers)
             if response.status_code == 404:
                 result: dict[str, object] = {

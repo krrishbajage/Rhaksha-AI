@@ -24,6 +24,36 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <TextView style="@style/Text.Raksha.Label" android:text="@string/gmail_section_label" />
+                <Button
+                    android:id="@+id/connectGmailButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/connect_gmail" />
+                <Button
+                    android:id="@+id/syncEmailButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/sync_email_now"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
                 <TextView style="@style/Text.Raksha.Label" android:text="@string/alert_mode_label" />
                 <Spinner
                     android:id="@+id/alertModeSpinner"
