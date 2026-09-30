@@ -159,3 +159,31 @@ def to_security_event(message: dict[str, Any]) -> SecurityEvent:
       timestamp=timestamp,
       metadata=metadata,
   )
+
+
+def fetch_attachment_bytes(
+    user_email: str,
+    gmail_message_id: str,
+    attachment_id: str,
+) -> bytes:
+    """Retrieves raw attachment bytes for a message from the Gmail API."""
+    service = build_gmail_client(user_email)
+    attachment = (
+        service.users()
+        .messages()
+        .attachments()
+        .get(
+            userId="me",
+            messageId=gmail_message_id,
+            id=attachment_id,
+        )
+        .execute()
+    )
+
+    data = attachment.get("data", "")
+    if not data:
+        return b""
+
+    # Pad if missing standard base64 padding
+    padded = data + "=" * (-len(data) % 4)
+    return base64.urlsafe_b64decode(padded.encode("utf-8"))
