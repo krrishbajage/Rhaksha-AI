@@ -23,9 +23,11 @@ class InvestigationState(TypedDict, total=False):
     run_message_agent: bool
     run_url_agent: bool
     run_attachment_agent: bool
+    run_email_agent: bool
     message_report: Annotated[dict[str, Any], _merge_reports]
     url_report: Annotated[dict[str, Any], _merge_reports]
     attachment_report: Annotated[dict[str, Any], _merge_reports]
+    email_report: Annotated[dict[str, Any], _merge_reports]
     evidence: list[dict[str, Any]]
     risk_score: float
     risk_level: str

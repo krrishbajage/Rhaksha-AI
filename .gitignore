@@ -76,3 +76,7 @@ Thumbs.db
 
 RAKSHA_AI_Android.json
 RAKSHA_AI_Backend.json
+
+# Google OAuth and sync cache
+data/tokens.json
+data/processed_emails.json

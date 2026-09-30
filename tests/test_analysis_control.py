@@ -93,6 +93,7 @@ def test_daily_quota_model_is_cooled_down_before_overflow(monkeypatch: pytest.Mo
     )
     assert result.value == "fallback-ok"
     assert is_daily_quota_exceeded(quota_error)
+    assert not is_daily_quota_exceeded(RuntimeError("GenerateRequestsPerMinutePerProjectPerModel"))
     # The primary remains out of rotation for a subsequent request.
     result = controller.invoke_structured(
         schema=Output, messages=[], temperature=0, request_id="second", agent="test",
